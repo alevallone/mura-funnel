@@ -1307,8 +1307,7 @@ function purchaseSelected() {
   const quizData = sessionStorage.getItem('mura_quiz_data');
   if (quizData) {
     const d = JSON.parse(quizData);
-    if (d.nombre) cartUrl += '?checkout[email]=' + encodeURIComponent(d.nombre);
-  }
+if (d.email) cartUrl += '?checkout[email]=' + encodeURIComponent(d.email);  }
   window.location.href = cartUrl;
 }
 
