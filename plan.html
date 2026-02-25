@@ -4,6 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mūra — Tu Plan Meno Personalizado</title>
+
+<!-- ===== META PIXEL ===== -->
+<script>
+!function(f,b,e,v,n,t,s){
+  if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1664661887894561');
+  fbq('track', 'PageView');
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1664661887894561&ev=PageView&noscript=1"/>
+</noscript>
+
+<!-- ===== GA4 ===== -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LX0Z3VLVPD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-LX0Z3VLVPD');
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1264,7 +1292,7 @@ section.alt-bg { background: var(--bg-warm); }
   <div class="container">
     <h2 class="fade-in"><span id="final-nombre">Tu cuerpo</span> ya cambió.<br><em>Es hora de que tu plan también.</em></h2>
     <p class="fade-in">Dejá de pelear contra tu cuerpo con herramientas que no fueron hechas para vos. Empezá hoy con un programa que entiende lo que te pasa.</p>
-    <a href="#pricing" class="cta-btn fade-in">
+    <a href="#pricing" class="cta-btn fade-in" onclick="trackCTAClick('final_cta')">
       Quiero empezar mi plan
       <span class="cta-btn-sub">Pago único · Acceso inmediato</span>
     </a>
@@ -1276,44 +1304,74 @@ section.alt-bg { background: var(--bg-warm); }
 </div>
 
 <script>
-// ===== URL PARAMS =====
+// ===== HELPER: dispara Meta + GA4 juntos =====
+function trackEvent(eventName, params) {
+  if (window.fbq) {
+    var metaStandard = ['PageView','ViewContent','Lead','InitiateCheckout','Purchase','AddToCart'];
+    if (metaStandard.indexOf(eventName) >= 0) {
+      fbq('track', eventName, params || {});
+    } else {
+      fbq('trackCustom', eventName, params || {});
+    }
+  }
+  if (window.gtag) {
+    gtag('event', eventName, params || {});
+  }
+}
+
+// ===== URL PARAMS + ViewContent =====
 (function() {
-  const params = new URLSearchParams(window.location.search);
-  const nombre = params.get('nombre');
-  const perfil = params.get('perfil');
-  const pesoActual = params.get('peso_actual');
-  const pesoObjetivo = params.get('peso_objetivo');
-  const email = params.get('email');
-  const perfilNames = {
+  var params = new URLSearchParams(window.location.search);
+  var nombre = params.get('nombre');
+  var perfil = params.get('perfil');
+  var pesoActual = params.get('peso_actual');
+  var pesoObjetivo = params.get('peso_objetivo');
+  var email = params.get('email');
+
+  var perfilNames = {
     'bloqueo-hormonal': 'Bloqueo Hormonal',
     'desconexion-hormonal': 'Desconexión Hormonal',
     'fatiga-hormonal': 'Fatiga Hormonal'
   };
+
   if (perfil && perfilNames[perfil]) {
     var profileEl = document.getElementById('hero-profile');
     profileEl.textContent = 'Tu perfil: ' + perfilNames[perfil];
     profileEl.style.display = '';
   }
+
   if (pesoActual && pesoObjetivo) {
-    const diff = parseInt(pesoActual) - parseInt(pesoObjetivo);
+    var diff = parseInt(pesoActual) - parseInt(pesoObjetivo);
     if (diff > 0) document.getElementById('stat-peso').textContent = '-' + diff + ' kg';
   }
+
   if (nombre) {
     document.getElementById('hero-nombre').textContent = nombre + ', ';
     var fn = document.getElementById('final-nombre');
     if (fn) fn.textContent = nombre + ', tu cuerpo';
   }
+
   if (nombre || perfil) {
     sessionStorage.setItem('mura_quiz_data', JSON.stringify({ nombre, perfil, pesoActual, pesoObjetivo, email }));
+  }
+
+  // ── TRACKING: ViewContent al cargar la landing ──
+  // Se dispara solo si viene del quiz (tiene perfil en la URL)
+  if (perfil) {
+    trackEvent('ViewContent', {
+      content_name: perfil,
+      content_category: 'landing_post_quiz',
+      content_type: 'sales_page',
+    });
   }
 })();
 
 // ===== TIMER =====
 (function() {
-  let totalSeconds = 15 * 60;
-  const saved = sessionStorage.getItem('mura_timer');
+  var totalSeconds = 15 * 60;
+  var saved = sessionStorage.getItem('mura_timer');
   if (saved) {
-    const elapsed = Math.floor((Date.now() - parseInt(saved)) / 1000);
+    var elapsed = Math.floor((Date.now() - parseInt(saved)) / 1000);
     totalSeconds = Math.max(0, totalSeconds - elapsed);
   } else {
     sessionStorage.setItem('mura_timer', Date.now().toString());
@@ -1321,58 +1379,98 @@ section.alt-bg { background: var(--bg-warm); }
   function updateTimer() {
     if (totalSeconds <= 0) return;
     totalSeconds--;
-    document.getElementById('timer-min').textContent = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
-    document.getElementById('timer-sec').textContent = (totalSeconds % 60).toString().padStart(2, '0');
+    document.getElementById('timer-min').textContent = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+    document.getElementById('timer-sec').textContent = String(totalSeconds % 60).padStart(2, '0');
   }
   setInterval(updateTimer, 1000);
 })();
 
 // ===== FAQ =====
 function toggleFaq(btn) {
-  const item = btn.parentElement;
-  const wasOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  var item = btn.parentElement;
+  var wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
   if (!wasOpen) item.classList.add('open');
 }
 
 // ===== PRICING =====
-let selectedTier = '8sem';
+var selectedTier = '8sem';
+var tierPrices = { '4sem': 17990, '8sem': 22990, '12sem': 29990 };
+
 function selectCard(card, tier) {
   selectedTier = tier;
-  document.querySelectorAll('.pricing-card').forEach(c => {
+  document.querySelectorAll('.pricing-card').forEach(function(c) {
     c.classList.toggle('selected', c.dataset.tier === tier);
   });
 }
+
+// ── TRACKING: InitiateCheckout al clickear comprar ──
 function purchaseSelected() {
-  const variantMap = { '4sem': '47380658618598', '8sem': '47380661043430', '12sem': '47380663042278' };
-  const bump1 = document.getElementById('bump-check');
-  const bump2 = document.getElementById('bump-check-2');
-  const bumpChecked = (bump1 && bump1.checked) || (bump2 && bump2.checked);
-  let cartUrl = 'https://tienda.somosmura.com/cart/' + variantMap[selectedTier] + ':1';
+  var variantMap = { '4sem': '47380658618598', '8sem': '47380661043430', '12sem': '47380663042278' };
+  var bump1 = document.getElementById('bump-check');
+  var bump2 = document.getElementById('bump-check-2');
+  var bumpChecked = (bump1 && bump1.checked) || (bump2 && bump2.checked);
+  var value = tierPrices[selectedTier] + (bumpChecked ? 7990 : 0);
+
+  // Dispara InitiateCheckout antes del redirect
+  trackEvent('InitiateCheckout', {
+    value: value,
+    currency: 'ARS',
+    content_ids: [selectedTier],
+    num_items: bumpChecked ? 2 : 1,
+    content_name: selectedTier + (bumpChecked ? '_con_bump' : ''),
+  });
+
+  var cartUrl = 'https://tienda.somosmura.com/cart/' + variantMap[selectedTier] + ':1';
   if (bumpChecked) cartUrl += ',47384149524710:1';
-  const quizData = sessionStorage.getItem('mura_quiz_data');
+  var quizData = sessionStorage.getItem('mura_quiz_data');
   if (quizData) {
-    const d = JSON.parse(quizData);
+    var d = JSON.parse(quizData);
     if (d.email) cartUrl += '?checkout[email]=' + encodeURIComponent(d.email);
   }
   window.location.href = cartUrl;
 }
 
-// ===== SYNC BUMPS =====
+// ── TRACKING: AddToCart al activar bump ──
+function trackCTAClick(location) {
+  trackEvent('LandingCTAClick', { location: location });
+}
+
+// ===== SYNC BUMPS + AddToCart tracking =====
 (function() {
-  const b1 = document.getElementById('bump-check'), b2 = document.getElementById('bump-check-2');
+  var b1 = document.getElementById('bump-check');
+  var b2 = document.getElementById('bump-check-2');
+
+  function onBumpChange(checked) {
+    if (checked) {
+      // Dispara AddToCart solo cuando marcan el bump (no cuando lo desmarcan)
+      trackEvent('AddToCart', {
+        value: 7990,
+        currency: 'ARS',
+        content_ids: ['bump_pack_alivio'],
+        content_name: 'Pack de Alivio Inmediato',
+      });
+    }
+  }
+
   if (b1 && b2) {
-    b1.addEventListener('change', () => b2.checked = b1.checked);
-    b2.addEventListener('change', () => b1.checked = b2.checked);
+    b1.addEventListener('change', function() {
+      b2.checked = b1.checked;
+      onBumpChange(b1.checked);
+    });
+    b2.addEventListener('change', function() {
+      b1.checked = b2.checked;
+      onBumpChange(b2.checked);
+    });
   }
 })();
 
 // ===== FADE IN =====
 (function() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  document.querySelectorAll('.fade-in').forEach(function(el) { observer.observe(el); });
 })();
 </script>
 
