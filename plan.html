@@ -439,15 +439,56 @@ section.alt-bg { background: var(--bg-warm); }
   max-width: 520px;
   margin: 0 auto;
   background: linear-gradient(135deg, rgba(212,165,116,0.08), rgba(181,104,90,0.06));
-  border: 2px dashed var(--accent);
+  border: none;
   border-radius: var(--radius);
-  padding: 18px 20px;
+  padding: 28px 22px 20px;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+}
+.bump-box::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 200%; height: 200%;
+  background: conic-gradient(from 0deg, transparent 0%, #D4A574 25%, transparent 50%, #B5685A 75%, transparent 100%);
+  animation: rotateBorder 4s linear infinite;
+  transform-origin: center;
+  z-index: -2;
+}
+.bump-box::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px; right: 2px; bottom: 2px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #FFF9F5, #FFFBF7);
+  z-index: -1;
+}
+@keyframes rotateBorder {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.bump-tag {
+  position: absolute;
+  top: -1px;
+  right: 20px;
+  background: linear-gradient(135deg, #B5685A, #D4A574);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 0 0 8px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 1;
 }
 .bump-header {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
 }
 .bump-checkbox {
   width: 22px;
@@ -468,6 +509,8 @@ section.alt-bg { background: var(--bg-warm); }
   color: var(--text-light);
   line-height: 1.6;
   padding-left: 32px;
+  position: relative;
+  z-index: 1;
 }
 
 /* ===== SYMPTOMS (clean, no cards) ===== */
@@ -782,7 +825,7 @@ section.alt-bg { background: var(--bg-warm); }
   .agitation-num { font-size: 48px; }
   .agitation-content h3 { font-size: 19px; }
   
-  .bump-box { padding: 16px; }
+  .bump-box { padding: 28px 16px 16px; }
   .bump-desc { padding-left: 0; margin-top: 8px; }
   .bump-title { font-size: 16px; }
   
@@ -836,7 +879,8 @@ section.alt-bg { background: var(--bg-warm); }
     </div>
     
     <div class="mockup-wrap fade-in">
-<img src="https://cdn.shopify.com/s/files/1/0794/3766/0390/files/mockup-programa.jpg?v=1771997649" alt="Tu Plan Meno — programa completo" class="mockup-img">    </div>
+      <img src="https://cdn.shopify.com/s/files/1/0794/3766/0390/files/mockup-programa.jpg?v=1771997649" alt="Tu Plan Meno — programa completo" class="mockup-img">
+    </div>
     
     <div class="deliverables-stack fade-in">
       <div class="deliverable-row">
@@ -928,6 +972,7 @@ section.alt-bg { background: var(--bg-warm); }
     </div>
     
     <div class="bump-box fade-in">
+      <div class="bump-tag">🎁 3 de cada 4 mujeres lo eligen</div>
       <div class="bump-header">
         <input type="checkbox" class="bump-checkbox" id="bump-check">
         <label for="bump-check" class="bump-title">SÍ, quiero agregar el Pack de Alivio Inmediato por <span class="bump-price">$7.990</span></label>
@@ -1153,6 +1198,7 @@ section.alt-bg { background: var(--bg-warm); }
     </div>
     
     <div class="bump-box fade-in">
+      <div class="bump-tag">🎁 3 de cada 4 mujeres lo eligen</div>
       <div class="bump-header">
         <input type="checkbox" class="bump-checkbox" id="bump-check-2">
         <label for="bump-check-2" class="bump-title">SÍ, quiero agregar el Pack de Alivio Inmediato por <span class="bump-price">$7.990</span></label>
@@ -1258,7 +1304,8 @@ section.alt-bg { background: var(--bg-warm); }
     if (fn) fn.textContent = nombre + ', tu cuerpo';
   }
   if (nombre || perfil) {
-sessionStorage.setItem('mura_quiz_data', JSON.stringify({ nombre, perfil, pesoActual, pesoObjetivo, email }));  }
+    sessionStorage.setItem('mura_quiz_data', JSON.stringify({ nombre, perfil, pesoActual, pesoObjetivo, email }));
+  }
 })();
 
 // ===== TIMER =====
@@ -1301,12 +1348,13 @@ function purchaseSelected() {
   const bump1 = document.getElementById('bump-check');
   const bump2 = document.getElementById('bump-check-2');
   const bumpChecked = (bump1 && bump1.checked) || (bump2 && bump2.checked);
-let cartUrl = 'https://tienda.somosmura.com/cart/' + variantMap[selectedTier] + ':1';
+  let cartUrl = 'https://tienda.somosmura.com/cart/' + variantMap[selectedTier] + ':1';
   if (bumpChecked) cartUrl += ',47384149524710:1';
   const quizData = sessionStorage.getItem('mura_quiz_data');
   if (quizData) {
     const d = JSON.parse(quizData);
-if (d.email) cartUrl += '?checkout[email]=' + encodeURIComponent(d.email);  }
+    if (d.email) cartUrl += '?checkout[email]=' + encodeURIComponent(d.email);
+  }
   window.location.href = cartUrl;
 }
 
