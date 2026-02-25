@@ -22,11 +22,11 @@ const F2 = "'Cormorant Garamond', serif";
 const LOGO = "data:image/png;base64,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";
 
 /* ── IMAGES (Shopify CDN) ── */
-const HERO_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/WhatsApp_Image_2026-02-24_at_03.28.17.jpg?v=1772008696";
-const C1_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Whisk_b1a5bc09f18b6e4b60b4abbf45814092dr.png?v=1772008561";
-const C2_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Whisk_ac9983593137161a87b4119e4ea1231ddr.jpg?v=1772007977";
-const C3_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Diseno_Sin_Titulo_-_1_-_Editado.png?v=1772007978";
-const C4_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Whisk_79758414d8149528082492ac7376c851dr.jpg?v=1772008321";
+const HERO_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/WhatsApp_Image_2026-02-24_at_03.28.17.jpg?v=1772008696&width=480";
+const C1_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Whisk_b1a5bc09f18b6e4b60b4abbf45814092dr.png?v=1772008561&width=440";
+const C2_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Whisk_ac9983593137161a87b4119e4ea1231ddr.jpg?v=1772007977&width=440";
+const C3_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Diseno_Sin_Titulo_-_1_-_Editado.png?v=1772007978&width=440";
+const C4_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Whisk_79758414d8149528082492ac7376c851dr.jpg?v=1772008321&width=440";
 
 /* ── SCREENS ── */
 const Q = [
@@ -189,6 +189,17 @@ export default function MuraQuiz() {
     else { setMulti(function(p) { var c = p.filter(function(v){return v!=="ninguna"}); return c.indexOf(val)>=0 ? c.filter(function(v){return v!==val}) : c.concat([val]); }); }
   };
 
+  // Preconnect to Shopify CDN + preload hero image
+  useEffect(function() {
+    var pc = document.createElement("link");
+    pc.rel = "preconnect"; pc.href = "https://cdn.shopify.com"; pc.crossOrigin = "anonymous";
+    document.head.appendChild(pc);
+    var pl = document.createElement("link");
+    pl.rel = "preload"; pl.as = "image"; pl.href = HERO_IMG;
+    document.head.appendChild(pl);
+    return function() { document.head.removeChild(pc); document.head.removeChild(pl); };
+  }, []);
+
   useEffect(function() {
     if (!scr || scr.t !== "calc") return;
     setCalcPh(0);
@@ -241,7 +252,7 @@ export default function MuraQuiz() {
             <p style={{fontSize:18, fontWeight:600, color:PRI, fontFamily:F2, margin:"0 0 6px"}}>{scr.hl2}</p>
             <p style={{fontSize:13, color:TXM, fontFamily:F1, margin:"0 0 16px"}}>{scr.tag}</p>
             <div style={{width:"100%", maxWidth:300, borderRadius:16, overflow:"hidden", margin:"0 auto"}}>
-              <img src={HERO_IMG} alt="" style={{width:"100%", display:"block", borderRadius:16}} />
+              <img src={HERO_IMG} alt="" fetchPriority="high" decoding="async" style={{width:"100%", display:"block", borderRadius:16, background:PRI_LT}} />
             </div>
           </div>
           <div style={{padding:"16px 20px 32px"}}>
@@ -337,7 +348,7 @@ export default function MuraQuiz() {
         <div style={{padding:"28px 22px", display:"flex", flexDirection:"column", alignItems:"center", textAlign:"center", justifyContent:"center", minHeight:"65vh"}}>
           {scr.imgSrc ? (
             <div style={{width:"100%", maxWidth:320, borderRadius:20, overflow:"hidden", marginBottom:20}}>
-              <img src={scr.imgSrc} alt="" style={{width:"100%", display:"block", borderRadius:20}} />
+              <img src={scr.imgSrc} alt="" loading="lazy" decoding="async" style={{width:"100%", display:"block", borderRadius:20, background:PRI_LT}} />
             </div>
           ) : scr.img ? (
             <div style={{width:"100%", maxWidth:320, height:160, borderRadius:20, background:"linear-gradient(135deg, "+PRI_LT+", #F9F2EE)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", marginBottom:20, border:"1px dashed "+OPT_BD}}>
@@ -363,7 +374,7 @@ export default function MuraQuiz() {
         <div style={{padding:"28px 20px", textAlign:"center"}}>
           {scr.imgSrc ? (
             <div style={{width:"100%", borderRadius:20, overflow:"hidden", marginBottom:18}}>
-              <img src={scr.imgSrc} alt="" style={{width:"100%", display:"block", borderRadius:20}} />
+              <img src={scr.imgSrc} alt="" loading="lazy" decoding="async" style={{width:"100%", display:"block", borderRadius:20, background:PRI_LT}} />
             </div>
           ) : scr.img ? (
             <div style={{width:"100%", height:140, borderRadius:20, background:"linear-gradient(135deg, "+PRI_LT+", #F9F2EE)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", marginBottom:18, border:"1px dashed "+OPT_BD}}>
