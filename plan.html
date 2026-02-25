@@ -1302,7 +1302,8 @@ function purchaseSelected() {
   const bump1 = document.getElementById('bump-check');
   const bump2 = document.getElementById('bump-check-2');
   const bumpChecked = (bump1 && bump1.checked) || (bump2 && bump2.checked);
-  let cartUrl = 'https://mura-7596.myshopify.com/cart/' + variantMap[selectedTier] + ':1';
+  let cartUrl = 'https://tienda.somosmura.com/cart/
+' + variantMap[selectedTier] + ':1';
   if (bumpChecked) cartUrl += ',47384149524710:1';
   const quizData = sessionStorage.getItem('mura_quiz_data');
   if (quizData) {
