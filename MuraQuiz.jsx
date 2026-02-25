@@ -689,6 +689,7 @@ export default function MuraQuiz() {
             if (ans.name) params.push("nombre="+encodeURIComponent(ans.name));
             var profileSlug = profKey === "bloqueo" ? "bloqueo-hormonal" : profKey === "desconexion" ? "desconexion-hormonal" : "fatiga-hormonal";
             params.push("perfil="+profileSlug);
+          if (ans.email) params.push("email="+encodeURIComponent(ans.email));
             if (ans.weight) params.push("peso_actual="+ans.weight);
             if (ans.wGoal) { var goals={"5-10":"7","10-15":"12","15-20":"17","20+":"22","no-se":"8"}; params.push("peso_objetivo="+(ans.weight - (goals[ans.wGoal]||8))); }
             window.location.href = "/plan?" + params.join("&");
