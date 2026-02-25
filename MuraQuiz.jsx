@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 /* ── BRAND ── */
 const PRI = "#B5685A";
@@ -19,7 +19,21 @@ const YEL = "#D4A03C";
 const RED = "#C75050";
 const F1 = "'Nunito Sans', sans-serif";
 const F2 = "'Cormorant Garamond', serif";
-const LOGO = "data:image/png;base64,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";
+
+/* ── LOGO SVG (reemplaza base64 roto) ── */
+const MuraLogo = () => (
+  <svg width="90" height="28" viewBox="0 0 90 28" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#B5685A"/>
+        <stop offset="100%" stopColor="#D4A574"/>
+      </linearGradient>
+    </defs>
+    <text x="0" y="22" fontFamily="'Cormorant Garamond', Georgia, serif" fontSize="26" fontWeight="700" fill="url(#logoGrad)" letterSpacing="1">
+      Mūra
+    </text>
+  </svg>
+);
 
 /* ── IMAGES (Shopify CDN) ── */
 const HERO_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/WhatsApp_Image_2026-02-24_at_03.28.17.jpg?v=1772008696&width=480";
@@ -28,14 +42,27 @@ const C2_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Whisk_ac9
 const C3_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Diseno_Sin_Titulo_-_1_-_Editado.png?v=1772007978&width=440";
 const C4_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Whisk_79758414d8149528082492ac7376c851dr.jpg?v=1772008321&width=440";
 
-/* ── TRACKING ── */
+/* ── TRACKING CONFIG ── */
 const META_PIXEL_ID = "1664661887894561";
 const GA4_ID = "G-LX0Z3VLVPD";
-
-// Eventos estándar de Meta que van con fbq('track', ...)
 const META_STANDARD_EVENTS = ["PageView","ViewContent","Lead","InitiateCheckout","Purchase","AddToCart","CompleteRegistration"];
 
-function track(eventName, params) {
+/* ══════════════════════════════════════════════════
+   TRACKING QUEUE SYSTEM
+   - Encola eventos hasta que Meta Pixel y GA4 estén listos
+   - Despacha la cola cuando ambos scripts cargan
+   ══════════════════════════════════════════════════ */
+const trackingQueue = [];
+let trackingReady = false;
+
+function flushQueue() {
+  while (trackingQueue.length > 0) {
+    const { eventName, params } = trackingQueue.shift();
+    fireEvent(eventName, params);
+  }
+}
+
+function fireEvent(eventName, params) {
   // Meta Pixel
   if (typeof window !== "undefined" && window.fbq) {
     if (META_STANDARD_EVENTS.includes(eventName)) {
@@ -48,6 +75,19 @@ function track(eventName, params) {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", eventName, params || {});
   }
+}
+
+function track(eventName, params) {
+  if (trackingReady && typeof window !== "undefined" && window.fbq && window.gtag) {
+    fireEvent(eventName, params);
+  } else {
+    trackingQueue.push({ eventName, params });
+  }
+}
+
+function markTrackingReady() {
+  trackingReady = true;
+  flushQueue();
 }
 
 /* ── SCREENS ── */
@@ -149,6 +189,7 @@ export default function MuraQuiz() {
   var _fb = useState(""), fbTxt = _fb[0], setFbTxt = _fb[1];
   var _cp = useState(0), calcPh = _cp[0], setCalcPh = _cp[1];
   var _nv = useState(""), numVal = _nv[0], setNumVal = _nv[1];
+  var trackingInitialized = useRef(false);
 
   var scr = Q[idx];
   var isQType = scr && (scr.t==="q"||scr.t==="hero"||scr.t==="slider"||scr.t==="num");
@@ -162,8 +203,14 @@ export default function MuraQuiz() {
   var wp = getWP(ans.weight, ans.wGoal);
   var fwl = getFWL(bmi);
 
-  // ── TRACKING: cargar Meta Pixel + GA4 al montar ──
+  /* ══════════════════════════════════════════════════
+     FIX 1: Cargar scripts de tracking y marcar ready
+     Solo después se despacha la cola de eventos
+     ══════════════════════════════════════════════════ */
   useEffect(function() {
+    if (trackingInitialized.current) return;
+    trackingInitialized.current = true;
+
     // Preconnect CDN
     var pc = document.createElement("link");
     pc.rel = "preconnect"; pc.href = "https://cdn.shopify.com"; pc.crossOrigin = "anonymous";
@@ -172,45 +219,94 @@ export default function MuraQuiz() {
     pl.rel = "preload"; pl.as = "image"; pl.href = HERO_IMG;
     document.head.appendChild(pl);
 
-    // Meta Pixel
-    (function(f,b,e,v,n,t,s){
-      if(f.fbq)return;
-      n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;
-      n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];
-      t=b.createElement(e);t.async=!0;t.src=v;
-      s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s);
-    })(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
-    window.fbq("init", META_PIXEL_ID);
-    window.fbq("track", "PageView");
+    var metaReady = false;
+    var gaReady = false;
 
-    // GA4
-    var gaScript = document.createElement("script");
-    gaScript.async = true;
-    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=" + GA4_ID;
-    document.head.appendChild(gaScript);
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ window.dataLayer.push(arguments); }
-    window.gtag = gtag;
-    gtag("js", new Date());
-    gtag("config", GA4_ID);
+    function checkBothReady() {
+      if (metaReady && gaReady) {
+        markTrackingReady();
+      }
+    }
+
+    // ── Meta Pixel ──
+    if (window.fbq) {
+      // Ya existe (cargado por otro componente o script externo)
+      metaReady = true;
+      checkBothReady();
+    } else {
+      (function(f,b,e,v,n,t,s){
+        if(f.fbq)return;
+        n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];
+        t=b.createElement(e);t.async=!0;t.src=v;
+        t.onload = function() {
+          metaReady = true;
+          checkBothReady();
+        };
+        t.onerror = function() {
+          // Si falla el pixel, marcamos ready igual para no bloquear GA4
+          console.warn("Meta Pixel failed to load");
+          metaReady = true;
+          checkBothReady();
+        };
+        s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s);
+      })(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+      window.fbq("init", META_PIXEL_ID);
+      window.fbq("track", "PageView");
+    }
+
+    // ── GA4 ──
+    if (window.gtag) {
+      gaReady = true;
+      checkBothReady();
+    } else {
+      var gaScript = document.createElement("script");
+      gaScript.async = true;
+      gaScript.src = "https://www.googletagmanager.com/gtag/js?id=" + GA4_ID;
+      gaScript.onload = function() {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ window.dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag("js", new Date());
+        gtag("config", GA4_ID);
+        gaReady = true;
+        checkBothReady();
+      };
+      gaScript.onerror = function() {
+        console.warn("GA4 failed to load");
+        gaReady = true;
+        checkBothReady();
+      };
+      document.head.appendChild(gaScript);
+    }
+
+    // Fallback: si después de 5s no cargaron, despachar cola igual
+    var fallbackTimer = setTimeout(function() {
+      if (!trackingReady) {
+        console.warn("Tracking scripts timeout — flushing queue with available tools");
+        markTrackingReady();
+      }
+    }, 5000);
 
     return function() {
+      clearTimeout(fallbackTimer);
       try { document.head.removeChild(pc); } catch(e) {}
       try { document.head.removeChild(pl); } catch(e) {}
     };
   }, []);
 
-  // ── TRACKING: evento por cada pantalla ──
+  /* ══════════════════════════════════════════════════
+     FIX 2: Tracking por pantalla — usa track() con cola
+     Los eventos se encolan si los scripts no están listos
+     ══════════════════════════════════════════════════ */
   useEffect(function() {
     if (!scr) return;
-    // Evento custom por paso — visible en Meta Events Manager y GA4 como "QuizStep_P1", etc.
     track("QuizStep_" + scr.id, {
       step_id: scr.id,
       step_index: idx,
       step_type: scr.t,
     });
-    // Pantalla de resultados → ViewContent con el perfil
     if (scr.t === "profile") {
       track("ViewContent", {
         content_name: profKey,
@@ -218,7 +314,7 @@ export default function MuraQuiz() {
         content_type: "quiz_result",
       });
     }
-  }, [idx]);
+  }, [idx, scr, profKey]);
 
   var next = useCallback(function() {
     if (busy) return; setBusy(true); setFbTxt("");
@@ -251,15 +347,12 @@ export default function MuraQuiz() {
     next();
   }, [slVal, next]);
 
-  // ── TRACKING: Lead al capturar email ──
   var submitEmail = useCallback(function() {
     if (!eName.trim() || eAddr.indexOf("@") < 0) return;
     setAns(function(p) { var n = Object.assign({}, p); n.name = eName; n.email = eAddr; return n; });
-    // Dispara Lead con el perfil hormonal como dato clave
     track("Lead", {
       content_name: profKey,
       content_category: "quiz_completado",
-      // GA4 también captura esto como evento de generación de leads
     });
     next();
   }, [eName, eAddr, next, profKey]);
@@ -283,7 +376,7 @@ export default function MuraQuiz() {
     var t2 = setTimeout(function(){setCalcPh(2)}, 6000);
     var t3 = setTimeout(function(){setCalcPh(3); setTimeout(next, 1000);}, 9000);
     return function() { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, [idx]);
+  }, [idx, scr, next]);
 
   /* ── STYLES ── */
   var optSt = function(sel) {
@@ -777,7 +870,6 @@ export default function MuraQuiz() {
             <p style={{fontSize:12, color:TXM, fontFamily:F1, margin:0, fontWeight:700}}>{"— "+prof.tn+", "+prof.ta}</p>
           </div>
           <button onClick={function(){
-            // ── TRACKING: InitiateCheckout desde pantalla plan ──
             track("InitiateCheckout", {
               content_name: profKey,
               content_category: "quiz_to_checkout",
@@ -816,7 +908,7 @@ export default function MuraQuiz() {
         "body { margin: 0; background: #EDE8E3; }",
       ].join("\n")}</style>
 
-      {/* HEADER */}
+      {/* ══ FIX 3: Logo SVG en lugar de base64 roto ══ */}
       <div style={{display:"flex", alignItems:"center", padding:"14px 16px 0", gap:12}}>
         {showBack ? (
           <button onClick={back} style={{width:40, height:40, borderRadius:12, border:"1.5px solid "+OPT_BD, background:CARD, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:TX2, flexShrink:0}}>
@@ -824,7 +916,7 @@ export default function MuraQuiz() {
           </button>
         ) : <div style={{width:40}}/>}
         <div style={{display:"flex", alignItems:"center", flex:1, justifyContent:"center", marginRight:40}}>
-          <img src={LOGO} alt="Mūra" style={{height:22, objectFit:"contain"}} />
+          <MuraLogo />
         </div>
       </div>
 
