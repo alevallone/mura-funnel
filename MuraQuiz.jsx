@@ -20,21 +20,6 @@ const RED = "#C75050";
 const F1 = "'Nunito Sans', sans-serif";
 const F2 = "'Cormorant Garamond', serif";
 
-/* ── LOGO SVG (reemplaza base64 roto) ── */
-const MuraLogo = () => (
-  <svg width="90" height="28" viewBox="0 0 90 28" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#B5685A"/>
-        <stop offset="100%" stopColor="#D4A574"/>
-      </linearGradient>
-    </defs>
-    <text x="0" y="22" fontFamily="'Cormorant Garamond', Georgia, serif" fontSize="26" fontWeight="700" fill="url(#logoGrad)" letterSpacing="1">
-      Mūra
-    </text>
-  </svg>
-);
-
 /* ── IMAGES (Shopify CDN) ── */
 const HERO_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/WhatsApp_Image_2026-02-24_at_03.28.17.jpg?v=1772008696&width=480";
 const C1_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Whisk_b1a5bc09f18b6e4b60b4abbf45814092dr.png?v=1772008561&width=440";
@@ -916,7 +901,7 @@ export default function MuraQuiz() {
           </button>
         ) : <div style={{width:40}}/>}
         <div style={{display:"flex", alignItems:"center", flex:1, justifyContent:"center", marginRight:40}}>
-          <MuraLogo />
+          <img src="https://cdn.shopify.com/s/files/1/0794/3766/0390/files/mura-high-resolution-logo-transparent.png?v=1771997092" alt="Mūra" style={{height:26, objectFit:"contain"}} />
         </div>
       </div>
 
