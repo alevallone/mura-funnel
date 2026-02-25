@@ -1259,8 +1259,7 @@ section.alt-bg { background: var(--bg-warm); }
     if (fn) fn.textContent = nombre + ', tu cuerpo';
   }
   if (nombre || perfil) {
-    sessionStorage.setItem('mura_quiz_data', JSON.stringify({ nombre, perfil, pesoActual, pesoObjetivo }));
-  }
+sessionStorage.setItem('mura_quiz_data', JSON.stringify({ nombre, perfil, pesoActual, pesoObjetivo, email }));  }
 })();
 
 // ===== TIMER =====
