@@ -1304,18 +1304,43 @@ section.alt-bg { background: var(--bg-warm); }
 </div>
 
 <script>
-// ===== HELPER: dispara Meta + GA4 juntos =====
+/* ══════════════════════════════════════════════════
+   FIX: trackEvent con retry/cola para robustez
+   Si fbq o gtag no están listos aún (raro en landing 
+   pero posible con conexiones lentas), reintenta 1 vez.
+   ══════════════════════════════════════════════════ */
 function trackEvent(eventName, params) {
-  if (window.fbq) {
-    var metaStandard = ['PageView','ViewContent','Lead','InitiateCheckout','Purchase','AddToCart'];
-    if (metaStandard.indexOf(eventName) >= 0) {
-      fbq('track', eventName, params || {});
-    } else {
-      fbq('trackCustom', eventName, params || {});
+  var metaStandard = ['PageView','ViewContent','Lead','InitiateCheckout','Purchase','AddToCart'];
+
+  function fireMeta() {
+    if (window.fbq) {
+      if (metaStandard.indexOf(eventName) >= 0) {
+        fbq('track', eventName, params || {});
+      } else {
+        fbq('trackCustom', eventName, params || {});
+      }
+      return true;
     }
+    return false;
   }
-  if (window.gtag) {
-    gtag('event', eventName, params || {});
+
+  function fireGA() {
+    if (window.gtag) {
+      gtag('event', eventName, params || {});
+      return true;
+    }
+    return false;
+  }
+
+  var metaOk = fireMeta();
+  var gaOk = fireGA();
+
+  // Si alguno falló, reintenta una vez después de 1.5s
+  if (!metaOk || !gaOk) {
+    setTimeout(function() {
+      if (!metaOk) fireMeta();
+      if (!gaOk) fireGA();
+    }, 1500);
   }
 }
 
@@ -1352,11 +1377,10 @@ function trackEvent(eventName, params) {
   }
 
   if (nombre || perfil) {
-    sessionStorage.setItem('mura_quiz_data', JSON.stringify({ nombre, perfil, pesoActual, pesoObjetivo, email }));
+    sessionStorage.setItem('mura_quiz_data', JSON.stringify({ nombre: nombre, perfil: perfil, pesoActual: pesoActual, pesoObjetivo: pesoObjetivo, email: email }));
   }
 
   // ── TRACKING: ViewContent al cargar la landing ──
-  // Se dispara solo si viene del quiz (tiene perfil en la URL)
   if (perfil) {
     trackEvent('ViewContent', {
       content_name: perfil,
@@ -1404,7 +1428,6 @@ function selectCard(card, tier) {
   });
 }
 
-// ── TRACKING: InitiateCheckout al clickear comprar ──
 function purchaseSelected() {
   var variantMap = { '4sem': '47380658618598', '8sem': '47380661043430', '12sem': '47380663042278' };
   var bump1 = document.getElementById('bump-check');
@@ -1412,7 +1435,6 @@ function purchaseSelected() {
   var bumpChecked = (bump1 && bump1.checked) || (bump2 && bump2.checked);
   var value = tierPrices[selectedTier] + (bumpChecked ? 7990 : 0);
 
-  // Dispara InitiateCheckout antes del redirect
   trackEvent('InitiateCheckout', {
     value: value,
     currency: 'ARS',
@@ -1421,17 +1443,19 @@ function purchaseSelected() {
     content_name: selectedTier + (bumpChecked ? '_con_bump' : ''),
   });
 
-  var cartUrl = 'https://tienda.somosmura.com/cart/' + variantMap[selectedTier] + ':1';
-  if (bumpChecked) cartUrl += ',47384149524710:1';
-  var quizData = sessionStorage.getItem('mura_quiz_data');
-  if (quizData) {
-    var d = JSON.parse(quizData);
-    if (d.email) cartUrl += '?checkout[email]=' + encodeURIComponent(d.email);
-  }
-  window.location.href = cartUrl;
+  // Pequeño delay para asegurar que el evento se envió antes del redirect
+  setTimeout(function() {
+    var cartUrl = 'https://tienda.somosmura.com/cart/' + variantMap[selectedTier] + ':1';
+    if (bumpChecked) cartUrl += ',47384149524710:1';
+    var quizData = sessionStorage.getItem('mura_quiz_data');
+    if (quizData) {
+      var d = JSON.parse(quizData);
+      if (d.email) cartUrl += '?checkout[email]=' + encodeURIComponent(d.email);
+    }
+    window.location.href = cartUrl;
+  }, 300);
 }
 
-// ── TRACKING: AddToCart al activar bump ──
 function trackCTAClick(location) {
   trackEvent('LandingCTAClick', { location: location });
 }
@@ -1443,7 +1467,6 @@ function trackCTAClick(location) {
 
   function onBumpChange(checked) {
     if (checked) {
-      // Dispara AddToCart solo cuando marcan el bump (no cuando lo desmarcan)
       trackEvent('AddToCart', {
         value: 7990,
         currency: 'ARS',
