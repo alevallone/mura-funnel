@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mūra — Tu Plan Meno Personalizado</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #B5685A;
+  --primary-dark: #9A5548;
+  --accent: #D4A574;
+  --accent-light: #E8C9A0;
+  --bg: #FAFAF7;
+  --bg-warm: #F5F0EB;
+  --bg-card: #FFFFFF;
+  --text: #3D3131;
+  --text-light: #6B5B5B;
+  --text-muted: #9A8A8A;
+  --success: #7BAE7F;
+  --border: #E8DDD5;
+  --shadow: 0 2px 20px rgba(61,49,49,0.08);
+  --shadow-lg: 0 8px 40px rgba(61,49,49,0.12);
+  --radius: 12px;
+  --radius-lg: 20px;
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Nunito Sans', -apple-system, sans-serif;
+  --max-width: 780px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ===== TIMER BAR ===== */
+.timer-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--primary);
+  color: white;
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 12px rgba(181,104,90,0.3);
+}
+.timer-bar span {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 3px;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* ===== SECTION BASE ===== */
+section { padding: 64px 0; }
+section.alt-bg { background: var(--bg-warm); }
+
+/* ===== ORNAMENTAL DIVIDER ===== */
+.ornament {
+  text-align: center;
+  padding: 12px 0;
+  color: var(--accent);
+  font-size: 20px;
+  letter-spacing: 12px;
+  opacity: 0.5;
+  user-select: none;
+}
+
+/* ===== SECTION HEADING ===== */
+.section-heading {
+  text-align: center;
+  margin-bottom: 44px;
+}
+.section-heading h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 5vw, 38px);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.section-heading h2 em {
+  color: var(--primary);
+  font-style: italic;
+}
+.section-heading p {
+  font-size: 17px;
+  color: var(--text-light);
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+/* ===== CTA BUTTON ===== */
+.cta-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 700;
+  padding: 16px 40px;
+  border-radius: 50px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(181,104,90,0.35);
+  letter-spacing: 0.3px;
+}
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(181,104,90,0.45);
+}
+.cta-btn-sub {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+.cta-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 12px;
+}
+
+/* ===== HERO ===== */
+.hero {
+  padding: 48px 0 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -20%;
+  width: 140%;
+  height: 160%;
+  background: radial-gradient(ellipse at center top, rgba(212,165,116,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  animation: fadeInDown 0.6s ease;
+}
+.hero-badge svg { width: 16px; height: 16px; }
+.hero-profile {
+  font-family: var(--font-heading);
+  font-size: clamp(18px, 3.5vw, 22px);
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 8px;
+  animation: fadeInDown 0.6s ease 0.1s both;
+}
+.hero h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(32px, 6vw, 48px);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 20px;
+  animation: fadeInDown 0.6s ease 0.2s both;
+}
+.hero h1 em { color: var(--primary); font-style: italic; }
+.hero-sub {
+  font-size: 18px;
+  color: var(--text-light);
+  max-width: 560px;
+  margin: 0 auto 0;
+  animation: fadeInDown 0.6s ease 0.3s both;
+}
+
+/* ===== HERO STATS BAR ===== */
+.hero-stats-bar {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-radius: 16px;
+  padding: 0;
+  display: flex;
+  max-width: 560px;
+  margin: 0 auto;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(181,104,90,0.25);
+  animation: fadeInUp 0.6s ease 0.4s both;
+}
+.hero-stats-bar .stat {
+  flex: 1;
+  padding: 18px 12px;
+  text-align: center;
+  position: relative;
+}
+.hero-stats-bar .stat:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: rgba(255,255,255,0.2);
+}
+.hero-stats-bar .stat-number {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.1;
+}
+.hero-stats-bar .stat-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.75);
+  margin-top: 3px;
+  line-height: 1.3;
+}
+
+/* ===== MOCKUP IMAGE ===== */
+.mockup-wrap {
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+.mockup-img {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===== ENTREGABLES LIST ===== */
+.deliverables-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.deliverable-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  border-left: 3px solid var(--accent);
+  transition: transform 0.2s ease;
+}
+.deliverable-row:hover { transform: translateX(3px); }
+.deliverable-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(181,104,90,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.deliverable-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--primary);
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.deliverable-row p {
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+/* ===== PRICING ===== */
+.pricing-intro {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--text-light);
+  margin-bottom: 28px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.pricing-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 520px;
+  margin: 0 auto 24px;
+}
+.pricing-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  border: 2px solid var(--border);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.pricing-card:hover { border-color: var(--accent); }
+.pricing-card.selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+.pricing-badge {
+  position: absolute;
+  top: -11px;
+  left: 20px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 14px;
+  border-radius: 50px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.pricing-radio {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.pricing-card.selected .pricing-radio {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+.pricing-radio-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: white;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.pricing-card.selected .pricing-radio-dot { opacity: 1; }
+.pricing-info { flex: 1; min-width: 0; }
+.pricing-duration {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 3px;
+}
+.pricing-card.selected .pricing-duration { color: var(--primary); }
+.pricing-original {
+  font-size: 14px;
+  color: var(--text-muted);
+  text-decoration: line-through;
+  font-family: var(--font-heading);
+  margin-top: 2px;
+}
+.pricing-saving {
+  font-size: 12px;
+  color: var(--success);
+  font-weight: 600;
+  margin-top: 2px;
+}
+.pricing-pill {
+  flex-shrink: 0;
+  text-align: center;
+  background: var(--bg-warm);
+  border-radius: 10px;
+  padding: 10px 14px;
+  min-width: 90px;
+}
+.pricing-card.selected .pricing-pill {
+  background: linear-gradient(135deg, rgba(181,104,90,0.1), rgba(212,165,116,0.1));
+}
+.pricing-pill-amount {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+}
+.pricing-card.selected .pricing-pill-amount { color: var(--primary); }
+.pricing-pill-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.pricing-cta-wrap {
+  max-width: 520px;
+  margin: 0 auto 24px;
+  text-align: center;
+}
+.pricing-cta-wrap .cta-btn {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 17px;
+  border-radius: 14px;
+}
+.pricing-pago-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* ===== BUMP ===== */
+.bump-box {
+  max-width: 520px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(212,165,116,0.08), rgba(181,104,90,0.06));
+  border: 2px dashed var(--accent);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+.bump-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.bump-checkbox {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.bump-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+.bump-title .bump-price { color: var(--primary); }
+.bump-desc {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.6;
+  padding-left: 32px;
+}
+
+/* ===== SYMPTOMS (clean, no cards) ===== */
+.symptoms-list {
+  max-width: 520px;
+  margin: 0 auto 40px;
+}
+.symptom-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.symptom-row:last-child { border-bottom: none; }
+.symptom-emoji {
+  font-size: 24px;
+  flex-shrink: 0;
+  width: 36px;
+  text-align: center;
+}
+.symptom-row p {
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.section-closer {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--primary);
+  font-style: italic;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ===== AGITATION (editorial numbered) ===== */
+.agitation-blocks {
+  max-width: 560px;
+  margin: 0 auto 40px;
+}
+.agitation-block {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+.agitation-block:last-child { margin-bottom: 0; }
+.agitation-num {
+  flex-shrink: 0;
+  font-family: var(--font-heading);
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent-light);
+  margin-top: -6px;
+}
+.agitation-content h3 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.agitation-content p {
+  color: var(--text-light);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ===== COMPARISON (single table rows) ===== */
+.comparison-rows {
+  max-width: 560px;
+  margin: 0 auto;
+}
+.comparison-header {
+  display: grid;
+  grid-template-columns: 1fr 100px 100px;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 4px;
+}
+.comparison-header span {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+.comparison-header span:first-child { text-align: left; }
+.comparison-header .col-generic { color: var(--text-muted); }
+.comparison-header .col-mura { color: var(--primary); }
+.comparison-row {
+  display: grid;
+  grid-template-columns: 1fr 100px 100px;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
+  color: var(--text-light);
+  align-items: center;
+}
+.comparison-row:last-child { border-bottom: none; }
+.comparison-row span:not(:first-child) {
+  text-align: center;
+  font-size: 18px;
+}
+.comp-x { color: #D4A0A0; }
+.comp-check { color: var(--success); }
+
+/* ===== TESTIMONIALS (editorial) ===== */
+.testimonials-stack {
+  max-width: 540px;
+  margin: 0 auto;
+}
+.testimonial-item {
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.testimonial-item:last-child { border-bottom: none; }
+.testimonial-quote {
+  position: absolute;
+  top: 24px;
+  left: -8px;
+  font-family: var(--font-heading);
+  font-size: 72px;
+  color: var(--accent-light);
+  line-height: 1;
+  opacity: 0.5;
+  user-select: none;
+}
+.testimonial-item blockquote {
+  font-size: 17px;
+  color: var(--text);
+  line-height: 1.7;
+  font-style: italic;
+  margin-bottom: 16px;
+  padding-left: 28px;
+}
+.testimonial-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 28px;
+}
+.testimonial-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+}
+.testimonial-meta .name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+}
+.testimonial-meta .detail {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ===== GUARANTEE ===== */
+.guarantee-box {
+  max-width: 540px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 40px 36px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.guarantee-icon { font-size: 48px; margin-bottom: 16px; }
+.guarantee-box h2 {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.guarantee-box p {
+  color: var(--text-light);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ===== FAQ ===== */
+.faq-list { max-width: 600px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 20px 0;
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  transition: color 0.2s ease;
+}
+.faq-question:hover { color: var(--primary); }
+.faq-arrow {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.faq-item.open .faq-answer { max-height: 300px; }
+.faq-answer-inner {
+  padding-bottom: 20px;
+  font-size: 16px;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+/* ===== FINAL CTA ===== */
+.final-cta {
+  text-align: center;
+  background: linear-gradient(180deg, var(--bg-warm) 0%, var(--bg) 100%);
+  padding: 72px 0;
+}
+.final-cta h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 5vw, 38px);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.final-cta h2 em { color: var(--primary); font-style: italic; }
+.final-cta p {
+  font-size: 17px;
+  color: var(--text-light);
+  margin-bottom: 28px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  padding: 32px 24px;
+  font-size: 13px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 680px) {
+  section { padding: 48px 0; }
+  
+  .hero-stats-bar { flex-direction: row; border-radius: 12px; }
+  .hero-stats-bar .stat { padding: 14px 8px; }
+  .hero-stats-bar .stat-number { font-size: 20px; }
+  .hero-stats-bar .stat-label { font-size: 10px; }
+  
+  .deliverable-row { padding: 16px; gap: 14px; }
+  .deliverable-icon { width: 42px; height: 42px; }
+  .deliverable-icon svg { width: 20px; height: 20px; }
+  .deliverable-row p { font-size: 15px; }
+  
+  .pricing-card { padding: 14px 12px; gap: 10px; }
+  .pricing-duration { font-size: 17px; }
+  .pricing-original { font-size: 12px; }
+  .pricing-pill { padding: 8px 10px; min-width: 76px; }
+  .pricing-pill-amount { font-size: 18px; }
+  
+  .comparison-header,
+  .comparison-row {
+    grid-template-columns: 1fr 72px 72px;
+    font-size: 14px;
+  }
+  
+  .agitation-block { gap: 14px; }
+  .agitation-num { font-size: 48px; }
+  .agitation-content h3 { font-size: 19px; }
+  
+  .bump-box { padding: 16px; }
+  .bump-desc { padding-left: 0; margin-top: 8px; }
+  .bump-title { font-size: 16px; }
+  
+  .testimonial-quote { font-size: 56px; left: -4px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TIMER BAR -->
+<div class="timer-bar">
+  Tu precio especial se reservó por <span id="timer-min">14</span>:<span id="timer-sec">59</span> minutos
+</div>
+
+<!-- SECTION 1: HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+      Tu plan personalizado está listo
+    </div>
+    <div class="hero-profile" id="hero-profile" style="display:none;"></div>
+    <h1><span id="hero-nombre"></span>Recuperá el control de tu cuerpo<br>en la menopausia — <em>sin dietas genéricas<br>que ignoran lo que te pasa</em></h1>
+    <p class="hero-sub">Un programa diseñado para tu etapa hormonal, tu cuerpo y tus síntomas. No para una mujer promedio — para vos.</p>
+  </div>
+</section>
+
+<!-- STATS BAR (outside hero for full-width feel) -->
+<div style="padding: 0 24px 40px; max-width: calc(var(--max-width) + 48px); margin: 0 auto;">
+  <div class="hero-stats-bar">
+    <div class="stat">
+      <div class="stat-number" id="stat-peso">-8 kg</div>
+      <div class="stat-label">Proyección 12 sem.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">8 de 10</div>
+      <div class="stat-label">Mejoran en 4 sem.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">+2.400</div>
+      <div class="stat-label">Mujeres en el programa</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: ENTREGABLES -->
+<section class="alt-bg">
+  <div class="container">
+    <div class="section-heading fade-in">
+      <h2>Todo lo que incluye<br><em>tu plan Mūra</em></h2>
+    </div>
+    
+    <div class="mockup-wrap fade-in">
+      <img src="mockup-programa.png" alt="Tu Plan Meno — programa completo" class="mockup-img">
+    </div>
+    
+    <div class="deliverables-stack fade-in">
+      <div class="deliverable-row">
+        <div class="deliverable-icon"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg></div>
+        <p>Plan de alimentación adaptado a tu IMC y etapa hormonal</p>
+      </div>
+      <div class="deliverable-row">
+        <div class="deliverable-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <p>Rutina de movimiento de 15-20 min para tu nivel — sin gimnasio</p>
+      </div>
+      <div class="deliverable-row">
+        <div class="deliverable-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <p>Guía de manejo de los síntomas que marcaste en el quiz</p>
+      </div>
+      <div class="deliverable-row">
+        <div class="deliverable-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+        <p>Recetario hormonal: +30 recetas organizadas por síntoma</p>
+      </div>
+      <div class="deliverable-row">
+        <div class="deliverable-icon"><svg viewBox="0 0 24 24"><path d="M8 2v4m8-4v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg></div>
+        <p>Guía de suplementos según tu perfil: qué sirve, qué no, dosis</p>
+      </div>
+      <div class="deliverable-row">
+        <div class="deliverable-icon"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></div>
+        <p>Protocolo de sueño para menopausia — el síntoma #1 resuelto</p>
+      </div>
+      <div class="deliverable-row">
+        <div class="deliverable-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <p>Tracker de síntomas semanal imprimible</p>
+      </div>
+      <div class="deliverable-row">
+        <div class="deliverable-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg></div>
+        <p>Emails de acompañamiento durante las semanas de tu plan</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-heading fade-in">
+      <h2>Elegí la duración<br><em>que mejor se adapte a vos</em></h2>
+    </div>
+    <p class="pricing-intro fade-in">"4 semanas te da las herramientas. 8 semanas te ayuda a convertirlas en hábito. 12 semanas te transforma."</p>
+    
+    <div class="pricing-grid fade-in">
+      <div class="pricing-card" data-tier="4sem" onclick="selectCard(this, '4sem')">
+        <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
+        <div class="pricing-info">
+          <div class="pricing-duration">4 Semanas</div>
+          <div class="pricing-original">$24.990</div>
+        </div>
+        <div class="pricing-pill">
+          <div class="pricing-pill-amount">$17.990</div>
+          <div class="pricing-pill-label">pago único</div>
+        </div>
+      </div>
+      <div class="pricing-card featured selected" data-tier="8sem" onclick="selectCard(this, '8sem')">
+        <div class="pricing-badge">⭐ Más elegido</div>
+        <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
+        <div class="pricing-info">
+          <div class="pricing-duration">8 Semanas</div>
+          <div class="pricing-original">$34.990</div>
+          <div class="pricing-saving">Ahorrás 36% por semana</div>
+        </div>
+        <div class="pricing-pill">
+          <div class="pricing-pill-amount">$22.990</div>
+          <div class="pricing-pill-label">pago único</div>
+        </div>
+      </div>
+      <div class="pricing-card" data-tier="12sem" onclick="selectCard(this, '12sem')">
+        <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
+        <div class="pricing-info">
+          <div class="pricing-duration">12 Semanas</div>
+          <div class="pricing-original">$44.990</div>
+          <div class="pricing-saving">Ahorrás 44% por semana</div>
+        </div>
+        <div class="pricing-pill">
+          <div class="pricing-pill-amount">$29.990</div>
+          <div class="pricing-pill-label">pago único</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="pricing-cta-wrap fade-in">
+      <button class="cta-btn" onclick="purchaseSelected()">Quiero mi plan personalizado</button>
+      <p class="pricing-pago-note">Pago único · Mercado Pago · Garantía 7 días</p>
+    </div>
+    
+    <div class="bump-box fade-in">
+      <div class="bump-header">
+        <input type="checkbox" class="bump-checkbox" id="bump-check">
+        <label for="bump-check" class="bump-title">SÍ, quiero agregar el Pack de Alivio Inmediato por <span class="bump-price">$7.990</span></label>
+      </div>
+      <p class="bump-desc">Tu plan funciona, pero lleva tiempo. Mientras tanto, <strong>esta noche vas a tener sofocos y mañana te vas a despertar a las 3am.</strong> Este pack te da herramientas que funcionan desde hoy: protocolo para dormir de corrido esta misma noche, guía SOS para cortar un sofoco en 60 segundos, y recetas anti-inflamatorias listas en 10 minutos para los días que no tenés energía ni para pensar. <strong>El 73% de las mujeres lo agregan.</strong></p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 12px;">
+      <p class="cta-note">Accedés al instante desde tu celular o computadora. Sin apps complicadas.</p>
+    </div>
+  </div>
+</section>
+
+<div class="ornament">· · ·</div>
+
+<!-- SECTION 4: VALIDATION -->
+<section>
+  <div class="container">
+    <div class="section-heading fade-in">
+      <h2>Si sentís que tu cuerpo dejó de responderte...<br><em>no estás loca. Estás en menopausia.</em></h2>
+    </div>
+    
+    <div class="symptoms-list fade-in">
+      <div class="symptom-row">
+        <span class="symptom-emoji">⚖️</span>
+        <p>Subiste de peso sin cambiar nada de lo que comés ni cómo te movés</p>
+      </div>
+      <div class="symptom-row">
+        <span class="symptom-emoji">😴</span>
+        <p>Dormís mal, te despertás a las 3am y ya no podés volver a conciliar el sueño</p>
+      </div>
+      <div class="symptom-row">
+        <span class="symptom-emoji">🔥</span>
+        <p>Los sofocos te agarran en el peor momento y no sabés cómo pararlos</p>
+      </div>
+      <div class="symptom-row">
+        <span class="symptom-emoji">🧠</span>
+        <p>Te cuesta concentrarte, se te olvidan las cosas y sentís una niebla mental constante</p>
+      </div>
+      <div class="symptom-row">
+        <span class="symptom-emoji">😔</span>
+        <p>Perdiste energía, motivación, y a veces sentís que ya no te reconocés</p>
+      </div>
+    </div>
+    
+    <p class="section-closer fade-in">"Todo eso tiene una explicación hormonal.<br>Y más importante: tiene solución."</p>
+  </div>
+</section>
+
+<!-- SECTION 5: AGITATION (editorial numbered) -->
+<section class="alt-bg">
+  <div class="container">
+    <div class="section-heading fade-in">
+      <h2>No es que no hiciste lo suficiente.<br><em>Es que nada estaba diseñado para vos.</em></h2>
+    </div>
+    
+    <div class="agitation-blocks fade-in">
+      <div class="agitation-block">
+        <div class="agitation-num">01</div>
+        <div class="agitation-content">
+          <h3>Dietas genéricas</h3>
+          <p>Están diseñadas para un metabolismo de 30 años. A partir de los 40, tus hormonas cambian cómo procesás los alimentos, cómo almacenás grasa y cómo respondés al ayuno. Lo que funcionaba antes, ahora puede empeorar tus síntomas.</p>
+        </div>
+      </div>
+      <div class="agitation-block">
+        <div class="agitation-num">02</div>
+        <div class="agitation-content">
+          <h3>Ejercicio excesivo</h3>
+          <p>Más no es mejor en menopausia. El ejercicio intenso puede aumentar el cortisol — la hormona del estrés — y empeorar los sofocos, el insomnio y la acumulación de grasa abdominal. Tu cuerpo necesita movimiento diferente, no más castigo.</p>
+        </div>
+      </div>
+      <div class="agitation-block">
+        <div class="agitation-num">03</div>
+        <div class="agitation-content">
+          <h3>Suplementos al azar</h3>
+          <p>Sin saber tu perfil hormonal específico, estás adivinando. Los suplementos que le sirven a tu amiga pueden no hacerte nada — o peor, interferir con lo que tu cuerpo realmente necesita en esta etapa.</p>
+        </div>
+      </div>
+    </div>
+    
+    <p class="section-closer fade-in">"El problema nunca fuiste vos.<br>El problema es que nadie te ofreció algo diseñado<br>para tu etapa hormonal."</p>
+  </div>
+</section>
+
+<!-- SECTION 6: COMPARISON (table rows) -->
+<section>
+  <div class="container">
+    <div class="section-heading fade-in">
+      <h2>¿Por qué <em>Mūra</em> es diferente?</h2>
+    </div>
+    
+    <div class="comparison-rows fade-in">
+      <div class="comparison-header">
+        <span></span>
+        <span class="col-generic">Dieta genérica</span>
+        <span class="col-mura">Mūra</span>
+      </div>
+      <div class="comparison-row">
+        <span>Adaptada a tu edad y perfil</span>
+        <span class="comp-x">✕</span>
+        <span class="comp-check">✓</span>
+      </div>
+      <div class="comparison-row">
+        <span>Tiene en cuenta tus hormonas</span>
+        <span class="comp-x">✕</span>
+        <span class="comp-check">✓</span>
+      </div>
+      <div class="comparison-row">
+        <span>Acompañamiento semanal</span>
+        <span class="comp-x">✕</span>
+        <span class="comp-check">✓</span>
+      </div>
+      <div class="comparison-row">
+        <span>Protocolo de sueño incluido</span>
+        <span class="comp-x">✕</span>
+        <span class="comp-check">✓</span>
+      </div>
+      <div class="comparison-row">
+        <span>Diseñada para menopausia</span>
+        <span class="comp-x">✕</span>
+        <span class="comp-check">✓</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7: TESTIMONIALS (editorial) -->
+<section class="alt-bg">
+  <div class="container">
+    <div class="section-heading fade-in">
+      <h2>Lo que dicen mujeres<br><em>que ya empezaron su plan</em></h2>
+    </div>
+    
+    <div class="testimonials-stack fade-in">
+      <div class="testimonial-item">
+        <div class="testimonial-quote">"</div>
+        <blockquote>Probé de todo: nutricionista, gym, pastillas. Nada funcionaba y me sentía cada vez peor. Con Mūra entendí que mi cuerpo necesitaba algo diferente. En 6 semanas bajé 4 kilos y por fin duermo de corrido.</blockquote>
+        <div class="testimonial-meta">
+          <div class="testimonial-avatar">G</div>
+          <div>
+            <div class="name">Graciela M.</div>
+            <div class="detail">54 años · Buenos Aires</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-item">
+        <div class="testimonial-quote">"</div>
+        <blockquote>Lo que más me gustó es que no es una dieta más. Me explicaron POR QUÉ me pasaba lo que me pasaba. Los sofocos bajaron muchísimo y me siento yo de nuevo. Ojalá lo hubiera encontrado antes.</blockquote>
+        <div class="testimonial-meta">
+          <div class="testimonial-avatar">S</div>
+          <div>
+            <div class="name">Silvia R.</div>
+            <div class="detail">51 años · Córdoba</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-item">
+        <div class="testimonial-quote">"</div>
+        <blockquote>Las recetas son riquísimas y re fáciles. El protocolo de sueño fue un antes y un después. Ahora me despierto descansada por primera vez en meses. Se lo recomendé a todas mis amigas.</blockquote>
+        <div class="testimonial-meta">
+          <div class="testimonial-avatar">M</div>
+          <div>
+            <div class="name">Marta L.</div>
+            <div class="detail">48 años · Rosario</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 8: PRICING REPEAT -->
+<section id="pricing-2">
+  <div class="container">
+    <div class="section-heading fade-in">
+      <h2>¿Lista para empezar?<br><em>Elegí tu plan</em></h2>
+    </div>
+    
+    <div class="pricing-grid fade-in">
+      <div class="pricing-card" data-tier="4sem" onclick="selectCard(this, '4sem')">
+        <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
+        <div class="pricing-info">
+          <div class="pricing-duration">4 Semanas</div>
+          <div class="pricing-original">$24.990</div>
+        </div>
+        <div class="pricing-pill">
+          <div class="pricing-pill-amount">$17.990</div>
+          <div class="pricing-pill-label">pago único</div>
+        </div>
+      </div>
+      <div class="pricing-card featured selected" data-tier="8sem" onclick="selectCard(this, '8sem')">
+        <div class="pricing-badge">⭐ Más elegido</div>
+        <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
+        <div class="pricing-info">
+          <div class="pricing-duration">8 Semanas</div>
+          <div class="pricing-original">$34.990</div>
+          <div class="pricing-saving">Ahorrás 36% por semana</div>
+        </div>
+        <div class="pricing-pill">
+          <div class="pricing-pill-amount">$22.990</div>
+          <div class="pricing-pill-label">pago único</div>
+        </div>
+      </div>
+      <div class="pricing-card" data-tier="12sem" onclick="selectCard(this, '12sem')">
+        <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
+        <div class="pricing-info">
+          <div class="pricing-duration">12 Semanas</div>
+          <div class="pricing-original">$44.990</div>
+          <div class="pricing-saving">Ahorrás 44% por semana</div>
+        </div>
+        <div class="pricing-pill">
+          <div class="pricing-pill-amount">$29.990</div>
+          <div class="pricing-pill-label">pago único</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="pricing-cta-wrap fade-in">
+      <button class="cta-btn" onclick="purchaseSelected()">Quiero empezar hoy</button>
+      <p class="pricing-pago-note">Pago único · Mercado Pago · Garantía 7 días</p>
+    </div>
+    
+    <div class="bump-box fade-in">
+      <div class="bump-header">
+        <input type="checkbox" class="bump-checkbox" id="bump-check-2">
+        <label for="bump-check-2" class="bump-title">SÍ, quiero agregar el Pack de Alivio Inmediato por <span class="bump-price">$7.990</span></label>
+      </div>
+      <p class="bump-desc">Tu plan funciona, pero lleva tiempo. Mientras tanto, <strong>esta noche vas a tener sofocos y mañana te vas a despertar a las 3am.</strong> Este pack te da herramientas que funcionan desde hoy: protocolo para dormir de corrido esta misma noche, guía SOS para cortar un sofoco en 60 segundos, y recetas anti-inflamatorias listas en 10 minutos para los días que no tenés energía ni para pensar. <strong>El 73% de las mujeres lo agregan.</strong></p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 12px;">
+      <p class="cta-note">Accedés al instante desde tu celular o computadora. Sin apps complicadas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 9: GUARANTEE -->
+<section class="alt-bg">
+  <div class="container">
+    <div class="guarantee-box fade-in">
+      <div class="guarantee-icon">🛡️</div>
+      <h2>Garantía total de 7 días</h2>
+      <p>Si en 7 días sentís que el programa no es para vos, te devolvemos el 100% de tu dinero. Sin preguntas, sin vueltas, sin letra chica. El riesgo es nuestro, no tuyo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 10: FAQ -->
+<section>
+  <div class="container">
+    <div class="section-heading fade-in">
+      <h2>Preguntas frecuentes</h2>
+    </div>
+    
+    <div class="faq-list fade-in">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">¿Sirve si ya pasé la menopausia?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Sí. El programa está diseñado para mujeres en premenopausia, menopausia y postmenopausia. Los cambios hormonales no terminan después de la menopausia — tu cuerpo sigue necesitando un enfoque adaptado a tu realidad hormonal actual.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">¿Necesito ir al gimnasio?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="faq-answer"><div class="faq-answer-inner">No. Las rutinas de movimiento son de 15-20 minutos, sin equipamiento, diseñadas para hacer en tu casa. Están pensadas específicamente para menopausia — nada de saltos ni impacto fuerte.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">¿Es una suscripción?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="faq-answer"><div class="faq-answer-inner">No. Es un pago único. Pagás una vez y tenés acceso al programa completo para siempre. Sin renovaciones automáticas, sin sorpresas en tu tarjeta.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">¿Cuándo empiezo a ver resultados?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="faq-answer"><div class="faq-answer-inner">La mayoría de las mujeres notan mejoras en energía y sueño en la primera semana. Los cambios en peso y síntomas generales se hacen más evidentes entre la semana 3 y 4. Por eso recomendamos el plan de 8 semanas como mínimo para resultados sostenibles.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">¿Cómo recibo el programa?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Inmediatamente después de tu compra recibís un email con acceso a todo el programa. Lo podés ver desde tu celular o computadora, sin instalar ninguna aplicación. También podés descargar los PDFs para tenerlos siempre a mano.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">¿Puedo pagar con Mercado Pago?<svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="faq-answer"><div class="faq-answer-inner">Sí. Aceptamos tarjeta de crédito, débito, y saldo de Mercado Pago. También podés pagar en cuotas con tarjeta de crédito.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 11: FINAL CTA -->
+<section class="final-cta">
+  <div class="container">
+    <h2 class="fade-in"><span id="final-nombre">Tu cuerpo</span> ya cambió.<br><em>Es hora de que tu plan también.</em></h2>
+    <p class="fade-in">Dejá de pelear contra tu cuerpo con herramientas que no fueron hechas para vos. Empezá hoy con un programa que entiende lo que te pasa.</p>
+    <a href="#pricing" class="cta-btn fade-in">
+      Quiero empezar mi plan
+      <span class="cta-btn-sub">Pago único · Acceso inmediato</span>
+    </a>
+  </div>
+</section>
+
+<div class="footer">
+  <p>Mūra © 2026 · Este programa no reemplaza el consejo médico profesional.</p>
+</div>
+
+<script>
+// ===== URL PARAMS =====
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const nombre = params.get('nombre');
+  const perfil = params.get('perfil');
+  const pesoActual = params.get('peso_actual');
+  const pesoObjetivo = params.get('peso_objetivo');
+  const perfilNames = {
+    'bloqueo-hormonal': 'Bloqueo Hormonal',
+    'desconexion-hormonal': 'Desconexión Hormonal',
+    'fatiga-hormonal': 'Fatiga Hormonal'
+  };
+  if (perfil && perfilNames[perfil]) {
+    var profileEl = document.getElementById('hero-profile');
+    profileEl.textContent = 'Tu perfil: ' + perfilNames[perfil];
+    profileEl.style.display = '';
+  }
+  if (pesoActual && pesoObjetivo) {
+    const diff = parseInt(pesoActual) - parseInt(pesoObjetivo);
+    if (diff > 0) document.getElementById('stat-peso').textContent = '-' + diff + ' kg';
+  }
+  if (nombre) {
+    document.getElementById('hero-nombre').textContent = nombre + ', ';
+    var fn = document.getElementById('final-nombre');
+    if (fn) fn.textContent = nombre + ', tu cuerpo';
+  }
+  if (nombre || perfil) {
+    sessionStorage.setItem('mura_quiz_data', JSON.stringify({ nombre, perfil, pesoActual, pesoObjetivo }));
+  }
+})();
+
+// ===== TIMER =====
+(function() {
+  let totalSeconds = 15 * 60;
+  const saved = sessionStorage.getItem('mura_timer');
+  if (saved) {
+    const elapsed = Math.floor((Date.now() - parseInt(saved)) / 1000);
+    totalSeconds = Math.max(0, totalSeconds - elapsed);
+  } else {
+    sessionStorage.setItem('mura_timer', Date.now().toString());
+  }
+  function updateTimer() {
+    if (totalSeconds <= 0) return;
+    totalSeconds--;
+    document.getElementById('timer-min').textContent = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    document.getElementById('timer-sec').textContent = (totalSeconds % 60).toString().padStart(2, '0');
+  }
+  setInterval(updateTimer, 1000);
+})();
+
+// ===== FAQ =====
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// ===== PRICING =====
+let selectedTier = '8sem';
+function selectCard(card, tier) {
+  selectedTier = tier;
+  document.querySelectorAll('.pricing-card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.tier === tier);
+  });
+}
+function purchaseSelected() {
+  const variantMap = { '4sem': '47380658618598', '8sem': '47380661043430', '12sem': '47380663042278' };
+  const bump1 = document.getElementById('bump-check');
+  const bump2 = document.getElementById('bump-check-2');
+  const bumpChecked = (bump1 && bump1.checked) || (bump2 && bump2.checked);
+  let cartUrl = 'https://mura-7596.myshopify.com/cart/' + variantMap[selectedTier] + ':1';
+  if (bumpChecked) cartUrl += ',47384149524710:1';
+  const quizData = sessionStorage.getItem('mura_quiz_data');
+  if (quizData) {
+    const d = JSON.parse(quizData);
+    if (d.nombre) cartUrl += '?checkout[email]=' + encodeURIComponent(d.nombre);
+  }
+  window.location.href = cartUrl;
+}
+
+// ===== SYNC BUMPS =====
+(function() {
+  const b1 = document.getElementById('bump-check'), b2 = document.getElementById('bump-check-2');
+  if (b1 && b2) {
+    b1.addEventListener('change', () => b2.checked = b1.checked);
+    b2.addEventListener('change', () => b1.checked = b2.checked);
+  }
+})();
+
+// ===== FADE IN =====
+(function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+})();
+</script>
+
+</body>
+</html>
