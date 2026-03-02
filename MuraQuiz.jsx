@@ -215,7 +215,6 @@ export default function MuraQuiz() {
 
     // ── Meta Pixel ──
     if (window.fbq) {
-      // Ya existe (cargado por otro componente o script externo)
       metaReady = true;
       checkBothReady();
     } else {
@@ -230,7 +229,6 @@ export default function MuraQuiz() {
           checkBothReady();
         };
         t.onerror = function() {
-          // Si falla el pixel, marcamos ready igual para no bloquear GA4
           console.warn("Meta Pixel failed to load");
           metaReady = true;
           checkBothReady();
@@ -266,7 +264,6 @@ export default function MuraQuiz() {
       document.head.appendChild(gaScript);
     }
 
-    // Fallback: si después de 5s no cargaron, despachar cola igual
     var fallbackTimer = setTimeout(function() {
       if (!trackingReady) {
         console.warn("Tracking scripts timeout — flushing queue with available tools");
@@ -283,7 +280,9 @@ export default function MuraQuiz() {
 
   /* ══════════════════════════════════════════════════
      FIX 2: Tracking por pantalla — usa track() con cola
-     Los eventos se encolan si los scripts no están listos
+     ══════════════════════════════════════════════════
+     FIX 4: Eventos custom separados para GA4
+     - Quiz_ProfileView (solo quiz, no landing)
      ══════════════════════════════════════════════════ */
   useEffect(function() {
     if (!scr) return;
@@ -293,10 +292,16 @@ export default function MuraQuiz() {
       step_type: scr.t,
     });
     if (scr.t === "profile") {
+      // Evento estándar Meta (para optimización del pixel)
       track("ViewContent", {
         content_name: profKey,
         content_category: "perfil_hormonal",
         content_type: "quiz_result",
+      });
+      // ── FIX 4: Evento custom GA4 (diferenciable de la landing) ──
+      track("Quiz_ProfileView", {
+        content_name: profKey,
+        content_category: "perfil_hormonal",
       });
     }
   }, [idx, scr, profKey]);
@@ -339,8 +344,31 @@ export default function MuraQuiz() {
       content_name: profKey,
       content_category: "quiz_completado",
     });
+
+    // ── FIX 5: Enviar lead a Brevo via API route ──
+    // Fire-and-forget: no bloqueamos el quiz si falla
+    try {
+      fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: eAddr,
+          nombre: eName,
+          perfil: profKey,
+          edad: ans.age,
+          frustracion: ans.frustration,
+          sintomas: ans.symptoms,
+          etapa: ans.stage,
+          objetivo: ans.objective,
+          peso: ans.weight,
+          altura: ans.height,
+          imc: bmi,
+        }),
+      }).catch(function(e) { console.warn("Lead API error:", e); });
+    } catch(e) { console.warn("Lead API error:", e); }
+
     next();
-  }, [eName, eAddr, next, profKey]);
+  }, [eName, eAddr, next, profKey, ans, bmi]);
 
   var submitNum = useCallback(function() {
     var s = Q[idx]; var v = parseFloat(numVal);
@@ -855,11 +883,23 @@ export default function MuraQuiz() {
             <p style={{fontSize:12, color:TXM, fontFamily:F1, margin:0, fontWeight:700}}>{"— "+prof.tn+", "+prof.ta}</p>
           </div>
           <button onClick={function(){
+            /* ══════════════════════════════════════════════════
+               FIX 4: Eventos separados quiz vs landing
+               - InitiateCheckout → estándar Meta (pixel optimization)
+               - Quiz_GoToLanding → custom GA4 (solo quiz)
+               ══════════════════════════════════════════════════ */
+            // Evento estándar Meta
             track("InitiateCheckout", {
               content_name: profKey,
               content_category: "quiz_to_checkout",
               num_items: 1,
             });
+            // ── FIX 4: Evento custom GA4 (diferenciable de la landing) ──
+            track("Quiz_GoToLanding", {
+              content_name: profKey,
+              content_category: "quiz_to_landing",
+            });
+
             var params = [];
             if (ans.name) params.push("nombre="+encodeURIComponent(ans.name));
             var profileSlug = profKey === "bloqueo" ? "bloqueo-hormonal" : profKey === "desconexion" ? "desconexion-hormonal" : "fatiga-hormonal";
