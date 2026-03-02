@@ -1305,9 +1305,7 @@ section.alt-bg { background: var(--bg-warm); }
 
 <script>
 /* ══════════════════════════════════════════════════
-   FIX: trackEvent con retry/cola para robustez
-   Si fbq o gtag no están listos aún (raro en landing 
-   pero posible con conexiones lentas), reintenta 1 vez.
+   trackEvent con retry/cola para robustez
    ══════════════════════════════════════════════════ */
 function trackEvent(eventName, params) {
   var metaStandard = ['PageView','ViewContent','Lead','InitiateCheckout','Purchase','AddToCart'];
@@ -1335,7 +1333,6 @@ function trackEvent(eventName, params) {
   var metaOk = fireMeta();
   var gaOk = fireGA();
 
-  // Si alguno falló, reintenta una vez después de 1.5s
   if (!metaOk || !gaOk) {
     setTimeout(function() {
       if (!metaOk) fireMeta();
@@ -1344,7 +1341,7 @@ function trackEvent(eventName, params) {
   }
 }
 
-// ===== URL PARAMS + ViewContent =====
+// ===== URL PARAMS + TRACKING =====
 (function() {
   var params = new URLSearchParams(window.location.search);
   var nombre = params.get('nombre');
@@ -1380,12 +1377,19 @@ function trackEvent(eventName, params) {
     sessionStorage.setItem('mura_quiz_data', JSON.stringify({ nombre: nombre, perfil: perfil, pesoActual: pesoActual, pesoObjetivo: pesoObjetivo, email: email }));
   }
 
-  // ── TRACKING: ViewContent al cargar la landing ──
+  // ── TRACKING: Eventos estándar Meta + custom GA4 ──
   if (perfil) {
+    // Evento estándar Meta (para optimización del pixel)
     trackEvent('ViewContent', {
       content_name: perfil,
       content_category: 'landing_post_quiz',
       content_type: 'sales_page',
+    });
+
+    // ══ FIX 4: Evento custom GA4 (diferenciable del quiz) ══
+    trackEvent('Landing_PageView', {
+      content_name: perfil,
+      content_category: 'landing_post_quiz',
     });
   }
 })();
@@ -1435,6 +1439,7 @@ function purchaseSelected() {
   var bumpChecked = (bump1 && bump1.checked) || (bump2 && bump2.checked);
   var value = tierPrices[selectedTier] + (bumpChecked ? 7990 : 0);
 
+  // Evento estándar Meta (para optimización del pixel)
   trackEvent('InitiateCheckout', {
     value: value,
     currency: 'ARS',
@@ -1443,7 +1448,14 @@ function purchaseSelected() {
     content_name: selectedTier + (bumpChecked ? '_con_bump' : ''),
   });
 
-  // Pequeño delay para asegurar que el evento se envió antes del redirect
+  // ══ FIX 4: Evento custom GA4 (diferenciable del quiz) ══
+  trackEvent('Landing_Checkout', {
+    value: value,
+    currency: 'ARS',
+    tier: selectedTier,
+    bump: bumpChecked,
+  });
+
   setTimeout(function() {
     var cartUrl = 'https://tienda.somosmura.com/cart/' + variantMap[selectedTier] + ':1';
     if (bumpChecked) cartUrl += ',47384149524710:1';
@@ -1460,18 +1472,25 @@ function trackCTAClick(location) {
   trackEvent('LandingCTAClick', { location: location });
 }
 
-// ===== SYNC BUMPS + AddToCart tracking =====
+// ===== SYNC BUMPS + TRACKING =====
 (function() {
   var b1 = document.getElementById('bump-check');
   var b2 = document.getElementById('bump-check-2');
 
   function onBumpChange(checked) {
     if (checked) {
+      // Evento estándar Meta
       trackEvent('AddToCart', {
         value: 7990,
         currency: 'ARS',
         content_ids: ['bump_pack_alivio'],
         content_name: 'Pack de Alivio Inmediato',
+      });
+
+      // ══ FIX 4: Evento custom GA4 (diferenciable) ══
+      trackEvent('Landing_BumpAdd', {
+        value: 7990,
+        currency: 'ARS',
       });
     }
   }
