@@ -264,6 +264,44 @@ export default function MuraQuiz() {
       document.head.appendChild(gaScript);
     }
 
+    // ══════════════════════════════════════════════════
+    // BREVO TRACKER (client-side, sin backend)
+    // Reemplazar "TU_CLIENT_KEY_ACA" con tu client_key de Brevo
+    // Settings → Automations → Brevo tracker
+    // ══════════════════════════════════════════════════
+    (function() {
+      window.sib = {
+        equeue: [],
+        client_key: "8ytosa4lcissclq1t983znx1"
+      };
+      window.sendinblue = {};
+      var methods = ['track', 'identify', 'trackLink', 'page'];
+      for (var j = 0; j < methods.length; j++) {
+        (function(k) {
+          window.sendinblue[k] = function() {
+            var arg = Array.prototype.slice.call(arguments);
+            (window.sib[k] || function() {
+              var t = {};
+              t[k] = arg;
+              window.sib.equeue.push(t);
+            })(arg[0], arg[1], arg[2], arg[3]);
+          };
+        })(methods[j]);
+      }
+      var brevoScript = document.createElement("script");
+      var firstScript = document.getElementsByTagName("script")[0];
+      brevoScript.type = "text/javascript";
+      brevoScript.id = "sendinblue-js";
+      brevoScript.async = true;
+      brevoScript.src = "https://sibautomation.com/sa.js?key=" + window.sib.client_key;
+      if (firstScript && firstScript.parentNode) {
+        firstScript.parentNode.insertBefore(brevoScript, firstScript);
+      } else {
+        document.head.appendChild(brevoScript);
+      }
+      window.sendinblue.page();
+    })();
+
     var fallbackTimer = setTimeout(function() {
       if (!trackingReady) {
         console.warn("Tracking scripts timeout — flushing queue with available tools");
@@ -345,30 +383,35 @@ export default function MuraQuiz() {
       content_category: "quiz_completado",
     });
 
-    // ── FIX 5: Enviar lead a Brevo via API route ──
-    // Fire-and-forget: no bloqueamos el quiz si falla
-    try {
-      fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: eAddr,
-          nombre: eName,
-          perfil: profKey,
-          edad: ans.age,
-          frustracion: ans.frustration,
-          sintomas: ans.symptoms,
-          etapa: ans.stage,
-          objetivo: ans.objective,
-          peso: ans.weight,
-          altura: ans.height,
-          imc: bmi,
-        }),
-      }).catch(function(e) { console.warn("Lead API error:", e); });
-    } catch(e) { console.warn("Lead API error:", e); }
+    // ── BREVO: Identify contact + track event (client-side, sin backend) ──
+    if (window.sendinblue) {
+      // identify: asocia email con todos los datos del quiz
+      window.sendinblue.identify(eAddr, {
+        NOMBRE: eName,
+        PERFIL_HORMONAL: profKey,
+        EDAD_RANGO: ans.age || "",
+        FRUSTRACION: ans.frustration || "",
+        SINTOMAS: ans.symptoms ? ans.symptoms.join(", ") : "",
+        ETAPA: ans.stage || "",
+        OBJETIVO: ans.objective || "",
+        PESO_ACTUAL: ans.weight || 0,
+        ALTURA: ans.height || 0,
+        IMC: ans.height && ans.weight
+          ? parseFloat((ans.weight / ((ans.height/100) * (ans.height/100))).toFixed(1))
+          : 0,
+        NIVEL_CONTROL: ans.control || 0,
+        QUIZ_COMPLETADO: true,
+      });
+
+      // track: dispara evento "quiz_completed" para automatización
+      window.sendinblue.track("quiz_completed", {
+        perfil: profKey,
+        nombre: eName,
+      });
+    }
 
     next();
-  }, [eName, eAddr, next, profKey, ans, bmi]);
+  }, [eName, eAddr, next, profKey, ans]);
 
   var submitNum = useCallback(function() {
     var s = Q[idx]; var v = parseFloat(numVal);
