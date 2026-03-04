@@ -541,7 +541,7 @@ section.alt-bg { background: var(--bg-warm); }
   z-index: 1;
 }
 
-/* ===== SYMPTOMS (clean, no cards) ===== */
+/* ===== SYMPTOMS ===== */
 .symptoms-list {
   max-width: 520px;
   margin: 0 auto 40px;
@@ -576,7 +576,7 @@ section.alt-bg { background: var(--bg-warm); }
   margin: 0 auto;
 }
 
-/* ===== AGITATION (editorial numbered) ===== */
+/* ===== AGITATION ===== */
 .agitation-blocks {
   max-width: 560px;
   margin: 0 auto 40px;
@@ -609,7 +609,7 @@ section.alt-bg { background: var(--bg-warm); }
   line-height: 1.7;
 }
 
-/* ===== COMPARISON (single table rows) ===== */
+/* ===== COMPARISON ===== */
 .comparison-rows {
   max-width: 560px;
   margin: 0 auto;
@@ -649,7 +649,7 @@ section.alt-bg { background: var(--bg-warm); }
 .comp-x { color: #D4A0A0; }
 .comp-check { color: var(--success); }
 
-/* ===== TESTIMONIALS (editorial) ===== */
+/* ===== TESTIMONIALS ===== */
 .testimonials-stack {
   max-width: 540px;
   margin: 0 auto;
@@ -881,12 +881,13 @@ section.alt-bg { background: var(--bg-warm); }
   </div>
 </section>
 
-<!-- STATS BAR (outside hero for full-width feel) -->
+<!-- STATS BAR -->
 <div style="padding: 0 24px 40px; max-width: calc(var(--max-width) + 48px); margin: 0 auto;">
   <div class="hero-stats-bar">
     <div class="stat">
-      <div class="stat-number" id="stat-peso">-8 kg</div>
-      <div class="stat-label">Proyección 12 sem.</div>
+      <!-- ══ FIX: Ambos elementos tienen id para actualización dinámica ══ -->
+      <div class="stat-number" id="stat-peso">-5 a -8 kg</div>
+      <div class="stat-label" id="stat-peso-label">Promedio del programa</div>
     </div>
     <div class="stat">
       <div class="stat-number">8 de 10</div>
@@ -1050,7 +1051,7 @@ section.alt-bg { background: var(--bg-warm); }
   </div>
 </section>
 
-<!-- SECTION 5: AGITATION (editorial numbered) -->
+<!-- SECTION 5: AGITATION -->
 <section class="alt-bg">
   <div class="container">
     <div class="section-heading fade-in">
@@ -1085,7 +1086,7 @@ section.alt-bg { background: var(--bg-warm); }
   </div>
 </section>
 
-<!-- SECTION 6: COMPARISON (table rows) -->
+<!-- SECTION 6: COMPARISON -->
 <section>
   <div class="container">
     <div class="section-heading fade-in">
@@ -1127,7 +1128,7 @@ section.alt-bg { background: var(--bg-warm); }
   </div>
 </section>
 
-<!-- SECTION 7: TESTIMONIALS (editorial) -->
+<!-- SECTION 7: TESTIMONIALS -->
 <section class="alt-bg">
   <div class="container">
     <div class="section-heading fade-in">
@@ -1362,10 +1363,21 @@ function trackEvent(eventName, params) {
     profileEl.style.display = '';
   }
 
+  /* ══════════════════════════════════════════════════
+     FIX: Stat bar dinámico con fallback honesto
+     ══════════════════════════════════════════════════ */
   if (pesoActual && pesoObjetivo) {
     var diff = parseInt(pesoActual) - parseInt(pesoObjetivo);
-    if (diff > 0) document.getElementById('stat-peso').textContent = '-' + diff + ' kg';
+    if (diff > 0) {
+      // Número personalizado
+      document.getElementById('stat-peso').textContent = '-' + diff + ' kg';
+      // Timeframe coherente con la magnitud del cambio
+      var semanas = diff <= 4 ? 4 : diff <= 8 ? 8 : 12;
+      document.getElementById('stat-peso-label').textContent = 'Proyección ' + semanas + ' sem.';
+    }
   }
+  // Si NO llegan los params, el HTML ya tiene el fallback:
+  // "-5 a -8 kg" / "Promedio del programa"
 
   if (nombre) {
     document.getElementById('hero-nombre').textContent = nombre + ', ';
@@ -1377,16 +1389,13 @@ function trackEvent(eventName, params) {
     sessionStorage.setItem('mura_quiz_data', JSON.stringify({ nombre: nombre, perfil: perfil, pesoActual: pesoActual, pesoObjetivo: pesoObjetivo, email: email }));
   }
 
-  // ── TRACKING: Eventos estándar Meta + custom GA4 ──
+  // ── TRACKING ──
   if (perfil) {
-    // Evento estándar Meta (para optimización del pixel)
     trackEvent('ViewContent', {
       content_name: perfil,
       content_category: 'landing_post_quiz',
       content_type: 'sales_page',
     });
-
-    // ══ FIX 4: Evento custom GA4 (diferenciable del quiz) ══
     trackEvent('Landing_PageView', {
       content_name: perfil,
       content_category: 'landing_post_quiz',
@@ -1439,7 +1448,6 @@ function purchaseSelected() {
   var bumpChecked = (bump1 && bump1.checked) || (bump2 && bump2.checked);
   var value = tierPrices[selectedTier] + (bumpChecked ? 7990 : 0);
 
-  // Evento estándar Meta (para optimización del pixel)
   trackEvent('InitiateCheckout', {
     value: value,
     currency: 'ARS',
@@ -1448,7 +1456,6 @@ function purchaseSelected() {
     content_name: selectedTier + (bumpChecked ? '_con_bump' : ''),
   });
 
-  // ══ FIX 4: Evento custom GA4 (diferenciable del quiz) ══
   trackEvent('Landing_Checkout', {
     value: value,
     currency: 'ARS',
@@ -1479,15 +1486,12 @@ function trackCTAClick(location) {
 
   function onBumpChange(checked) {
     if (checked) {
-      // Evento estándar Meta
       trackEvent('AddToCart', {
         value: 7990,
         currency: 'ARS',
         content_ids: ['bump_pack_alivio'],
         content_name: 'Pack de Alivio Inmediato',
       });
-
-      // ══ FIX 4: Evento custom GA4 (diferenciable) ══
       trackEvent('Landing_BumpAdd', {
         value: 7990,
         currency: 'ARS',
