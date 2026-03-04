@@ -34,8 +34,6 @@ const META_STANDARD_EVENTS = ["PageView","ViewContent","Lead","InitiateCheckout"
 
 /* ══════════════════════════════════════════════════
    TRACKING QUEUE SYSTEM
-   - Encola eventos hasta que Meta Pixel y GA4 estén listos
-   - Despacha la cola cuando ambos scripts cargan
    ══════════════════════════════════════════════════ */
 const trackingQueue = [];
 let trackingReady = false;
@@ -48,7 +46,6 @@ function flushQueue() {
 }
 
 function fireEvent(eventName, params) {
-  // Meta Pixel
   if (typeof window !== "undefined" && window.fbq) {
     if (META_STANDARD_EVENTS.includes(eventName)) {
       window.fbq("track", eventName, params || {});
@@ -56,7 +53,6 @@ function fireEvent(eventName, params) {
       window.fbq("trackCustom", eventName, params || {});
     }
   }
-  // GA4
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", eventName, params || {});
   }
@@ -188,15 +184,10 @@ export default function MuraQuiz() {
   var wp = getWP(ans.weight, ans.wGoal);
   var fwl = getFWL(bmi);
 
-  /* ══════════════════════════════════════════════════
-     FIX 1: Cargar scripts de tracking y marcar ready
-     Solo después se despacha la cola de eventos
-     ══════════════════════════════════════════════════ */
   useEffect(function() {
     if (trackingInitialized.current) return;
     trackingInitialized.current = true;
 
-    // Preconnect CDN
     var pc = document.createElement("link");
     pc.rel = "preconnect"; pc.href = "https://cdn.shopify.com"; pc.crossOrigin = "anonymous";
     document.head.appendChild(pc);
@@ -213,7 +204,6 @@ export default function MuraQuiz() {
       }
     }
 
-    // ── Meta Pixel ──
     if (window.fbq) {
       metaReady = true;
       checkBothReady();
@@ -239,7 +229,6 @@ export default function MuraQuiz() {
       window.fbq("track", "PageView");
     }
 
-    // ── GA4 ──
     if (window.gtag) {
       gaReady = true;
       checkBothReady();
@@ -264,11 +253,6 @@ export default function MuraQuiz() {
       document.head.appendChild(gaScript);
     }
 
-    // ══════════════════════════════════════════════════
-    // BREVO TRACKER (client-side, sin backend)
-    // Reemplazar "TU_CLIENT_KEY_ACA" con tu client_key de Brevo
-    // Settings → Automations → Brevo tracker
-    // ══════════════════════════════════════════════════
     (function() {
       window.sib = {
         equeue: [],
@@ -316,12 +300,6 @@ export default function MuraQuiz() {
     };
   }, []);
 
-  /* ══════════════════════════════════════════════════
-     FIX 2: Tracking por pantalla — usa track() con cola
-     ══════════════════════════════════════════════════
-     FIX 4: Eventos custom separados para GA4
-     - Quiz_ProfileView (solo quiz, no landing)
-     ══════════════════════════════════════════════════ */
   useEffect(function() {
     if (!scr) return;
     track("QuizStep_" + scr.id, {
@@ -330,13 +308,11 @@ export default function MuraQuiz() {
       step_type: scr.t,
     });
     if (scr.t === "profile") {
-      // Evento estándar Meta (para optimización del pixel)
       track("ViewContent", {
         content_name: profKey,
         content_category: "perfil_hormonal",
         content_type: "quiz_result",
       });
-      // ── FIX 4: Evento custom GA4 (diferenciable de la landing) ──
       track("Quiz_ProfileView", {
         content_name: profKey,
         content_category: "perfil_hormonal",
@@ -383,9 +359,7 @@ export default function MuraQuiz() {
       content_category: "quiz_completado",
     });
 
-    // ── BREVO: Identify contact + track event (client-side, sin backend) ──
     if (window.sendinblue) {
-      // identify: asocia email con todos los datos del quiz
       window.sendinblue.identify(eAddr, {
         NOMBRE: eName,
         PERFIL_HORMONAL: profKey,
@@ -403,7 +377,6 @@ export default function MuraQuiz() {
         QUIZ_COMPLETADO: true,
       });
 
-      // track: dispara evento "quiz_completed" para automatización
       window.sendinblue.track("quiz_completed", {
         perfil: profKey,
         nombre: eName,
@@ -927,17 +900,13 @@ export default function MuraQuiz() {
           </div>
           <button onClick={function(){
             /* ══════════════════════════════════════════════════
-               FIX 4: Eventos separados quiz vs landing
-               - InitiateCheckout → estándar Meta (pixel optimization)
-               - Quiz_GoToLanding → custom GA4 (solo quiz)
+               FIX: Usar opts[].m de P14 en vez de mapa roto
                ══════════════════════════════════════════════════ */
-            // Evento estándar Meta
             track("InitiateCheckout", {
               content_name: profKey,
               content_category: "quiz_to_checkout",
               num_items: 1,
             });
-            // ── FIX 4: Evento custom GA4 (diferenciable de la landing) ──
             track("Quiz_GoToLanding", {
               content_name: profKey,
               content_category: "quiz_to_landing",
@@ -948,8 +917,16 @@ export default function MuraQuiz() {
             var profileSlug = profKey === "bloqueo" ? "bloqueo-hormonal" : profKey === "desconexion" ? "desconexion-hormonal" : "fatiga-hormonal";
             params.push("perfil="+profileSlug);
             if (ans.email) params.push("email="+encodeURIComponent(ans.email));
-            if (ans.weight) params.push("peso_actual="+ans.weight);
-            if (ans.wGoal) { var goals={"5-10":"7","10-15":"12","15-20":"17","20+":"22","no-se":"8"}; params.push("peso_objetivo="+(ans.weight - (goals[ans.wGoal]||8))); }
+
+            /* ══ FIX: peso_objetivo ahora usa la fuente real (opts[].m) ══ */
+            if (ans.weight) {
+              params.push("peso_actual=" + ans.weight);
+              var goalQ = Q.find(function(s){return s.id==="P14"});
+              var goalOpt = goalQ ? goalQ.opts.find(function(o){return o.v===ans.wGoal}) : null;
+              var goalLoss = goalOpt ? goalOpt.m : 4;
+              params.push("peso_objetivo=" + Math.round(ans.weight - goalLoss));
+            }
+
             window.location.href = "/plan?" + params.join("&");
           }} style={Object.assign({}, ctaSt(false), {fontSize:17, padding:"18px"})}>
             Quiero mi plan personalizado
@@ -976,7 +953,6 @@ export default function MuraQuiz() {
         "body { margin: 0; background: #EDE8E3; }",
       ].join("\n")}</style>
 
-      {/* ══ FIX 3: Logo SVG en lugar de base64 roto ══ */}
       <div style={{display:"flex", alignItems:"center", padding:"14px 16px 0", gap:12}}>
         {showBack ? (
           <button onClick={back} style={{width:40, height:40, borderRadius:12, border:"1.5px solid "+OPT_BD, background:CARD, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:TX2, flexShrink:0}}>
@@ -988,7 +964,6 @@ export default function MuraQuiz() {
         </div>
       </div>
 
-      {/* PROGRESS */}
       {isQType && (
         <div style={{padding:"10px 20px 0"}}>
           <div style={{height:3, background:OPT_BD, borderRadius:99, overflow:"hidden"}}>
@@ -997,7 +972,6 @@ export default function MuraQuiz() {
         </div>
       )}
 
-      {/* CONTENT */}
       <div style={{flex:1, overflowY:"auto"}} key={idx}>
         {renderScreen()}
       </div>
