@@ -21,7 +21,6 @@ const F1 = "'Nunito Sans', sans-serif";
 const F2 = "'Cormorant Garamond', serif";
 
 /* ── IMAGES (Shopify CDN) ── */
-const HERO_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/WhatsApp_Image_2026-02-24_at_03.28.17.jpg?v=1772008696&width=480";
 const C1_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Whisk_b1a5bc09f18b6e4b60b4abbf45814092dr.png?v=1772008561&width=440";
 const C2_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Whisk_ac9983593137161a87b4119e4ea1231ddr.jpg?v=1772007977&width=440";
 const C3_IMG = "https://cdn.shopify.com/s/files/1/0794/3766/0390/files/Diseno_Sin_Titulo_-_1_-_Editado.png?v=1772007978&width=440";
@@ -73,10 +72,13 @@ function markTrackingReady() {
 
 /* ── SCREENS ── */
 const Q = [
-  { id:"P1", t:"hero", k:"age", heroImg:true, hl:"Descubrí tu plan para la menopausia", hl2:"Perdé peso y volvé a sentirte bien", tag:"Test de 2 minutos", q:"Seleccioná tu edad",
-    opts:[{l:"38–45",v:"38-45"},{l:"46–50",v:"46-50"},{l:"51–58",v:"51-58"},{l:"59+",v:"59+"}] },
-  { id:"P2", t:"q", k:"frustration", f:"icons", q:"¿Cuál es tu mayor frustración con tu cuerpo en esta etapa?",
+  { id:"P1", t:"q", k:"frustration", f:"icons",
+    vp1:"Test de 2 min · +2.400 argentinas ya lo hicieron",
+    vp2:"Respondé y recibí tu plan hormonal personalizado",
+    q:"¿Cuál es tu mayor frustración con tu cuerpo en esta etapa?",
     opts:[{l:"Subí de peso y nada lo baja",v:"peso",i:"⚖️"},{l:"Cansada todo el tiempo, sin energía",v:"energía",i:"😴"},{l:"No duermo bien — me despierto en la madrugada",v:"sueño",i:"🌙"},{l:"Mi humor cambió: irritable, triste o ansiosa",v:"humor",i:"😔"}] },
+  { id:"P2", t:"q", k:"age", f:"age", q:"¿Cuántos años tenés?", sub:"Tu edad nos ayuda a personalizar tu plan hormonal",
+    opts:[{l:"38–45",v:"38-45"},{l:"46–50",v:"46-50"},{l:"51–58",v:"51-58"},{l:"59+",v:"59+"}] },
   { id:"P3", t:"q", k:"symptoms", f:"multi", q:"¿Cuáles de estos síntomas tenés?", sub:"Elegí todos los que apliquen",
     opts:[{l:"Sofocos o calores",v:"sofocos",i:"🔥"},{l:"Sudores nocturnos",v:"sudores",i:"💦"},{l:"Niebla mental",v:"niebla",i:"🧠"},{l:"Peso abdominal",v:"peso_abd",i:"⚖️"},{l:"Insomnio",v:"insomnio",i:"😴"},{l:"Cambios de humor",v:"humor",i:"😤"},{l:"Fatiga constante",v:"fatiga",i:"🪫"},{l:"Pérdida de deseo",v:"deseo",i:"💔"},{l:"Dolor articular",v:"dolor",i:"🦴"}] },
   { id:"C1", t:"card", title:"¿Sabías que todos estos síntomas tienen la misma causa?", img:"🧬", imgSrc:C1_IMG,
@@ -173,9 +175,9 @@ export default function MuraQuiz() {
   var trackingInitialized = useRef(false);
 
   var scr = Q[idx];
-  var isQType = scr && (scr.t==="q"||scr.t==="hero"||scr.t==="slider"||scr.t==="num");
-  var totalQ = Q.filter(function(s){return s.t==="q"||s.t==="hero"||s.t==="slider"||s.t==="num"}).length;
-  var doneQ = Q.slice(0, idx+1).filter(function(s){return s.t==="q"||s.t==="hero"||s.t==="slider"||s.t==="num"}).length;
+  var isQType = scr && (scr.t==="q"||scr.t==="slider"||scr.t==="num");
+  var totalQ = Q.filter(function(s){return s.t==="q"||s.t==="slider"||s.t==="num"}).length;
+  var doneQ = Q.slice(0, idx+1).filter(function(s){return s.t==="q"||s.t==="slider"||s.t==="num"}).length;
   var pct = Math.min((doneQ / totalQ) * 100, 100);
 
   var bmi = getBMI(ans.height, ans.weight);
@@ -191,9 +193,6 @@ export default function MuraQuiz() {
     var pc = document.createElement("link");
     pc.rel = "preconnect"; pc.href = "https://cdn.shopify.com"; pc.crossOrigin = "anonymous";
     document.head.appendChild(pc);
-    var pl = document.createElement("link");
-    pl.rel = "preload"; pl.as = "image"; pl.href = HERO_IMG;
-    document.head.appendChild(pl);
 
     var metaReady = false;
     var gaReady = false;
@@ -296,7 +295,6 @@ export default function MuraQuiz() {
     return function() {
       clearTimeout(fallbackTimer);
       try { document.head.removeChild(pc); } catch(e) {}
-      try { document.head.removeChild(pl); } catch(e) {}
     };
   }, []);
 
@@ -441,44 +439,36 @@ export default function MuraQuiz() {
   var renderScreen = function() {
     if (!scr) return null;
 
-    // HERO
-    if (scr.t === "hero") {
-      return (
-        <div>
-          <div style={{background:"linear-gradient(180deg, "+PRI_LT+", "+BG+")", padding:"20px 24px 16px", textAlign:"center"}}>
-            <h1 style={{fontSize:24, fontWeight:600, lineHeight:1.3, color:TX, fontFamily:F2, margin:"0 0 4px"}}>{scr.hl}</h1>
-            <p style={{fontSize:18, fontWeight:600, color:PRI, fontFamily:F2, margin:"0 0 6px"}}>{scr.hl2}</p>
-            <p style={{fontSize:13, color:TXM, fontFamily:F1, margin:"0 0 16px"}}>{scr.tag}</p>
-            <div style={{width:"100%", maxWidth:300, borderRadius:16, overflow:"hidden", margin:"0 auto"}}>
-              <img src={HERO_IMG} alt="" fetchPriority="high" decoding="async" style={{width:"100%", display:"block", borderRadius:16, background:PRI_LT}} />
-            </div>
-          </div>
-          <div style={{padding:"16px 20px 32px"}}>
-            <p style={{fontSize:17, fontWeight:700, color:TX, fontFamily:F1, marginBottom:14}}>{scr.q}</p>
-            <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:10}}>
-              {scr.opts.map(function(o) {
-                return (
-                  <button key={o.v} onClick={function(){pick(scr.k, o.v)}} style={{
-                    padding:"20px 12px", borderRadius:16, border:"2px solid transparent",
-                    background:OPT_BG, cursor:"pointer", fontSize:18, fontWeight:700, color:TX, fontFamily:F1, transition:"all 0.15s",
-                  }}>{o.l}</button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
     // QUESTION
     if (scr.t === "q") {
       return (
         <div style={{padding:"24px 20px 32px"}}>
+          {/* L4 value prop — only on P1 */}
+          {scr.vp1 && (
+            <div style={{marginBottom:18}}>
+              <p style={{fontSize:14, color:PRI, fontFamily:F1, fontWeight:700, margin:"0 0 4px"}}>{scr.vp2}</p>
+              <p style={{fontSize:12, color:TXM, fontFamily:F1, fontWeight:500, margin:0}}>{scr.vp1}</p>
+            </div>
+          )}
           <h2 style={{fontSize:20, fontWeight:700, lineHeight:1.4, color:TX, fontFamily:F1, marginBottom: scr.sub ? 6 : 18}}>{scr.q}</h2>
           {scr.sub && <p style={{fontSize:13, color:TXM, marginBottom:16, fontFamily:F1}}>{scr.sub}</p>}
           {scr.priv && <p style={{fontSize:12, color:TXM, marginBottom:12, fontFamily:F1}}>{"🔒 Tus datos son 100% privados."}</p>}
 
-          {scr.f === "multi" ? (
+          {scr.f === "age" ? (
+            <div style={{display:"flex", flexDirection:"column", gap:10}}>
+              {scr.opts.map(function(o) {
+                return (
+                  <button key={o.v} onClick={function(){pick(scr.k, o.v)}} style={{
+                    display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 18px", borderRadius:16,
+                    background:OPT_BG, border:"2px solid transparent", cursor:"pointer", width:"100%", transition:"all 0.15s",
+                  }}>
+                    <span style={{fontSize:17, fontWeight:700, color:TX, fontFamily:F1}}>{o.l}</span>
+                    {o.sl && <span style={{fontSize:12, color:TXM, fontFamily:F1, fontWeight:500}}>{o.sl}</span>}
+                  </button>
+                );
+              })}
+            </div>
+          ) : scr.f === "multi" ? (
             <div>
               <div style={{display:"flex", flexDirection:"column", gap:8}}>
                 {scr.opts.map(function(o) { return renderOpt(o, multi.indexOf(o.v)>=0, function(){toggleMulti(o.v)}); })}
