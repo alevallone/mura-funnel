@@ -364,7 +364,7 @@ section.alt-bg { background: var(--bg-warm); }
 .pricing-badge {
   position: absolute;
   top: -11px;
-  left: 20px;
+  right: 20px;
   background: linear-gradient(135deg, var(--primary), var(--accent));
   color: white;
   font-size: 11px;
@@ -961,32 +961,32 @@ section.alt-bg { background: var(--bg-warm); }
         <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
         <div class="pricing-info">
           <div class="pricing-duration">4 Semanas</div>
-          <div class="pricing-original">$24.990</div>
-        </div>
-        <div class="pricing-pill">
-          <div class="pricing-pill-amount">$17.990</div>
-          <div class="pricing-pill-label">pago único</div>
-        </div>
-      </div>
-      <div class="pricing-card featured selected" data-tier="8sem" onclick="selectCard(this, '8sem')">
-        <div class="pricing-badge">⭐ Más elegido</div>
-        <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
-        <div class="pricing-info">
-          <div class="pricing-duration">8 Semanas</div>
           <div class="pricing-original">$34.990</div>
-          <div class="pricing-saving">Ahorrás 36% por semana</div>
         </div>
         <div class="pricing-pill">
           <div class="pricing-pill-amount">$22.990</div>
           <div class="pricing-pill-label">pago único</div>
         </div>
       </div>
-      <div class="pricing-card" data-tier="12sem" onclick="selectCard(this, '12sem')">
+      <div class="pricing-card" data-tier="8sem" onclick="selectCard(this, '8sem')">
+        <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
+        <div class="pricing-info">
+          <div class="pricing-duration">8 Semanas</div>
+          <div class="pricing-original">$44.990</div>
+          <div class="pricing-saving">Ahorrás 41% por semana</div>
+        </div>
+        <div class="pricing-pill">
+          <div class="pricing-pill-amount">$25.990</div>
+          <div class="pricing-pill-label">pago único</div>
+        </div>
+      </div>
+      <div class="pricing-card featured selected" data-tier="12sem" onclick="selectCard(this, '12sem')">
+        <div class="pricing-badge">⭐ Más elegido</div>
         <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
         <div class="pricing-info">
           <div class="pricing-duration">12 Semanas</div>
-          <div class="pricing-original">$44.990</div>
-          <div class="pricing-saving">Ahorrás 44% por semana</div>
+          <div class="pricing-original">$54.990</div>
+          <div class="pricing-saving">Ahorrás 45% por semana</div>
         </div>
         <div class="pricing-pill">
           <div class="pricing-pill-amount">$29.990</div>
@@ -1187,32 +1187,32 @@ section.alt-bg { background: var(--bg-warm); }
         <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
         <div class="pricing-info">
           <div class="pricing-duration">4 Semanas</div>
-          <div class="pricing-original">$24.990</div>
-        </div>
-        <div class="pricing-pill">
-          <div class="pricing-pill-amount">$17.990</div>
-          <div class="pricing-pill-label">pago único</div>
-        </div>
-      </div>
-      <div class="pricing-card featured selected" data-tier="8sem" onclick="selectCard(this, '8sem')">
-        <div class="pricing-badge">⭐ Más elegido</div>
-        <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
-        <div class="pricing-info">
-          <div class="pricing-duration">8 Semanas</div>
           <div class="pricing-original">$34.990</div>
-          <div class="pricing-saving">Ahorrás 36% por semana</div>
         </div>
         <div class="pricing-pill">
           <div class="pricing-pill-amount">$22.990</div>
           <div class="pricing-pill-label">pago único</div>
         </div>
       </div>
-      <div class="pricing-card" data-tier="12sem" onclick="selectCard(this, '12sem')">
+      <div class="pricing-card" data-tier="8sem" onclick="selectCard(this, '8sem')">
+        <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
+        <div class="pricing-info">
+          <div class="pricing-duration">8 Semanas</div>
+          <div class="pricing-original">$44.990</div>
+          <div class="pricing-saving">Ahorrás 41% por semana</div>
+        </div>
+        <div class="pricing-pill">
+          <div class="pricing-pill-amount">$25.990</div>
+          <div class="pricing-pill-label">pago único</div>
+        </div>
+      </div>
+      <div class="pricing-card featured selected" data-tier="12sem" onclick="selectCard(this, '12sem')">
+        <div class="pricing-badge">⭐ Más elegido</div>
         <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
         <div class="pricing-info">
           <div class="pricing-duration">12 Semanas</div>
-          <div class="pricing-original">$44.990</div>
-          <div class="pricing-saving">Ahorrás 44% por semana</div>
+          <div class="pricing-original">$54.990</div>
+          <div class="pricing-saving">Ahorrás 45% por semana</div>
         </div>
         <div class="pricing-pill">
           <div class="pricing-pill-amount">$29.990</div>
@@ -1431,8 +1431,8 @@ function toggleFaq(btn) {
 }
 
 // ===== PRICING =====
-var selectedTier = '8sem';
-var tierPrices = { '4sem': 17990, '8sem': 22990, '12sem': 29990 };
+var selectedTier = '12sem';
+var tierPrices = { '4sem': 22990, '8sem': 25990, '12sem': 29990 };
 
 function selectCard(card, tier) {
   selectedTier = tier;
